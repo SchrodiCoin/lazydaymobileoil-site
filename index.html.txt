@@ -1,0 +1,398 @@
+<!-- File: index.html (Frontend) -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Lazy Day Mobile Oil – Book Now</title>
+<style>
+:root{--ink:#0f172a;--brand:#0E2A47;--ring:#e5e7eb;--bg:#F7F1E6;--accent:#C7382E}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Inter,system-ui,Arial}
+.wrap{max-width:1100px;margin:0 auto;padding:20px}
+.h1{font-size:28px;font-weight:900;color:var(--brand);margin:0 0 8px}
+.card{background:#fff;border:1px solid var(--ring);border-radius:16px;padding:18px;margin:12px 0;box-shadow:0 4px 12px rgba(0,0,0,.04)}
+.row{display:grid;gap:12px}
+@media(min-width:900px){.two{grid-template-columns:1fr 1fr}.three{grid-template-columns:1fr 1fr 1fr}.four{grid-template-columns:repeat(4,1fr)}}
+label{font-size:13px;font-weight:600;display:block;margin-bottom:4px}
+input,select,textarea{width:100%;padding:10px;border:1px solid var(--ring);border-radius:10px}
+.btn{background:var(--accent);color:#fff;border:none;border-radius:10px;padding:10px 14px;font-weight:800;cursor:pointer}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.note{font-size:12px;color:#6b7280}
+.preview-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.preview-grid img{width:100%;height:90px;object-fit:cover;border-radius:8px;border:1px solid var(--ring)}
+.table{width:100%;border-collapse:collapse}
+.table td{padding:6px 0;border-bottom:1px dotted #d1d5db}
+.table td:last-child{text-align:right}
+.total-line{font-weight:900}
+.badge{display:inline-block;background:#e2e8f0;color:#111;border-radius:999px;padding:2px 8px;font-size:12px}
+.tile-group{display:grid;gap:12px}
+@media(min-width:900px){.tile-group.four{grid-template-columns:repeat(4,1fr)}.tile-group.two{grid-template-columns:repeat(2,1fr)}}
+.tile{border:2px solid var(--ring);border-radius:14px;padding:12px;display:flex;justify-content:space-between;align-items:center;background:#fff}
+.tile input{transform:scale(1.3);margin-right:10px}
+.tile strong{font-size:15px}
+.tile small{color:#475569}
+.addons-head{font-size:16px;font-weight:800;margin:6px 0}
+.boxed{border:2px solid var(--ring);border-radius:14px;padding:12px}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="h1">Lazy Day Mobile Oil <span class="badge">Hours: 9:30 AM – 7:30 PM</span></div>
+  <p class="note">Serving Greenwood, IN & nearby. VIN lookup auto-fills vehicle specs. Card payment handled via Stripe Checkout.</p>
+
+  <!-- CONTACT -->
+  <section class="card"><h2>Contact</h2>
+    <div class="row two">
+      <div><label>First Name</label><input id="firstName" autocomplete="given-name"></div>
+      <div><label>Last Name</label><input id="lastName" autocomplete="family-name"></div>
+      <div><label>Phone</label><input id="phone" inputmode="tel" placeholder="(###) ###-####"></div>
+      <div><label>Email</label><input id="email" inputmode="email" placeholder="you@email.com"></div>
+    </div>
+  </section>
+
+  <!-- PHOTOS -->
+  <section class="card"><h2>Vehicle Photos</h2>
+    <div class="row four">
+      <div><label>Front</label><input type="file" id="photoFront" accept="image/*"></div>
+      <div><label>Driver Side</label><input type="file" id="photoDriver" accept="image/*"></div>
+      <div><label>Passenger Side</label><input type="file" id="photoPassenger" accept="image/*"></div>
+      <div><label>Rear</label><input type="file" id="photoRear" accept="image/*"></div>
+    </div>
+    <div id="photoPreview" class="preview-grid" style="margin-top:8px"></div>
+  </section>
+
+  <!-- ADDRESS -->
+  <section class="card"><h2>Service Address & Technician Notes</h2>
+    <div class="row two">
+      <div><label>Address</label><input id="addr"></div>
+      <div><label>City</label><input id="city"></div>
+      <div><label>State</label><input id="state" value="IN"></div>
+      <div><label>ZIP</label><input id="zip" inputmode="numeric"></div>
+    </div>
+    <label>Technician Notes</label>
+    <textarea id="techNotes" rows="3" placeholder="Parked in driveway, gate code 1234…"></textarea>
+  </section>
+
+  <!-- VIN -->
+  <section class="card"><h2>VIN Lookup</h2>
+    <div class="row two">
+      <div><label>VIN</label><input id="vin" maxlength="17" placeholder="1HGCM82633A004352"></div>
+      <div style="align-self:end"><button class="btn" id="decodeBtn" type="button">Lookup VIN</button></div>
+    </div>
+    <div id="decodeStatus" class="note"></div>
+    <div class="row three">
+      <div><label>Year</label><input id="year" readonly></div>
+      <div><label>Make</label><input id="make" readonly></div>
+      <div><label>Model</label><input id="model" readonly></div>
+    </div>
+    <div class="row three">
+      <div><label>Engine</label><input id="engine" readonly></div>
+      <div><label>Oil Capacity (qts)</label><input id="capacity" type="number" step="0.1" placeholder="5.5"><div class="note" id="capHelp"></div></div>
+      <div><label>Oil Grade</label>
+        <select id="viscosity">
+          <option value="">Select…</option>
+          <option>0W-16</option><option>0W-20</option><option>5W-20</option>
+          <option>5W-30</option><option>0W-30</option><option>10W-30</option><option>5W-40</option>
+        </select>
+        <div class="note" id="viscHelp"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="card"><h2>Services</h2>
+    <div class="row two">
+      <div><label>Primary Service</label>
+        <select id="service">
+          <option value="" disabled selected hidden>Select a service…</option>
+          <option value="oil">Oil Change (includes 5 qts)</option>
+          <option value="brakes_front">Front Brake Pads (Bundle)</option>
+          <option value="brakes_rear">Rear Brake Pads (Bundle)</option>
+          <option value="brakes_both">Front & Rear Brake Pads (Bundle)</option>
+          <option value="oil_both">Oil + F&R Brake Pads (Bundle)</option>
+        </select>
+        <div id="serviceHelp" class="note" style="margin-top:6px"></div>
+      </div>
+      <div><label>Oil Type</label>
+        <select id="oilType"><option value="conv">Conventional</option><option value="syn">Full Synthetic (+)</option></select>
+      </div>
+    </div>
+
+    <div class="boxed" style="margin-top:8px">
+      <div class="addons-head">Brake Parts (optional)</div>
+      <div class="tile-group four">
+        <label class="tile"><span><input type="checkbox" id="rotF"> <strong>Rotors (Front, pair)</strong></span> <small id="hintRotF"></small></label>
+        <label class="tile"><span><input type="checkbox" id="rotR"> <strong>Rotors (Rear, pair)</strong></span> <small id="hintRotR"></small></label>
+        <label class="tile"><span><input type="checkbox" id="calF"> <strong>Calipers (Front, pair)</strong></span> <small id="hintCalF"></small></label>
+        <label class="tile"><span><input type="checkbox" id="calR"> <strong>Calipers (Rear, pair)</strong></span> <small id="hintCalR"></small></label>
+        <label class="tile" style="grid-column:1/-1"><span><input type="checkbox" id="calB"> <strong>Calipers (Front & Rear)</strong></span> <small id="hintCalB"></small></label>
+      </div>
+    </div>
+
+    <div class="boxed" style="margin-top:12px">
+      <div class="addons-head">Add-ons</div>
+      <div id="addons" class="tile-group two"></div>
+    </div>
+  </section>
+
+  <!-- DATE/TIME -->
+  <section class="card"><h2>Preferred Date & Time</h2>
+    <div class="row two">
+      <div><label>Date</label><input id="prefDate" type="date"></div>
+      <div><label>Time</label><select id="prefSlot"><option value="" disabled selected hidden>Select a time…</option></select></div>
+    </div>
+    <div id="calHelp" class="note" style="margin-top:6px"></div>
+    <button class="btn" id="findTimes" style="margin-top:8px">Check Availability</button>
+  </section>
+
+  <!-- CART -->
+  <section class="card"><h2>Your Cart</h2>
+    <table class="table"><tbody id="lines"><tr><td class="note">No items yet</td><td class="note">$0.00</td></tr></tbody>
+      <tbody>
+        <tr id="discountRow" style="display:none"><td>Discount (<span id="promoName"></span>)</td><td id="discount">-$0.00</td></tr>
+        <tr><td>Indiana Sales Tax (7%)</td><td id="tax">$0.00</td></tr>
+        <tr class="total-line"><td>Total</td><td id="total">$0.00</td></tr>
+      </tbody>
+    </table>
+    <div class="row two" style="margin-top:6px">
+      <div><label>Promo code</label><input id="promoInput" placeholder="Promo Code here"></div>
+      <div style="align-self:end"><button class="btn" id="applyPromo" type="button">Apply</button> <span class="note" id="promoMsg"></span></div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;justify-content:flex-end;margin-top:10px">
+      <button class="btn" id="cashOut" disabled>Pay & Book</button>
+      <span id="submitNote" class="note"></span>
+    </div>
+  </section>
+</div>
+
+<script>
+/* ==== GAS endpoint (YOUR new URL) ==== */
+const GAS_ENDPOINT = "https://script.google.com/macros/s/AKfycbxFTeIkWPXlVRVSmtAWX4sVkKyGv1I1aXqq8Jj9HL5B5WMq3cOfn_Oj2B2XpY9apdUMBA/exec";
+
+/* Appointment Type IDs (from Acuity) */
+const ACUITY_TYPES = {
+  oil:          85364590,
+  brakes_front: 85364671,
+  brakes_rear:  85364740,
+  brakes_both:  85364836,
+  oil_both:     85364948
+};
+
+/* Optional staff calendar limit (leave empty to ignore) */
+const STAFF_CALENDAR_ID = "";
+
+const TAX = 0.07, OVERHEAD = 0.08;
+const PRICING = {oilBase:109.99,extraQt:7.99,synUp:29.99,
+  bundle:{compact:199,midsize:229,suv:259,truck:299,heavy:339},
+  rotors:{compact:240,midsize:280,suv:320,truck:360,heavy:420},
+  calipers:{compact:260,midsize:300,suv:340,truck:380,heavy:440}};
+const ADD_ONS = {"Wiper Blades (pair)":19.99,"Cabin Air Filter":39.99,"Engine Air Filter":34.99,"Washer Fluid Top-Off":4.99};
+
+const byId=id=>document.getElementById(id), nf=n=>'$'+(Math.round(n*100)/100).toFixed(2), pad2=n=>String(n).padStart(2,'0');
+function setSelectPlaceholder(sel, text){ sel.innerHTML=''; const o=document.createElement('option'); o.value=''; o.disabled=true; o.selected=true; o.hidden=true; o.textContent=text; sel.appendChild(o); }
+
+/* ==== INIT ==== */
+(function(){
+  const t=new Date(); const today=t.toISOString().slice(0,10);
+  byId('prefDate').setAttribute('min',today); t.setDate(t.getDate()+1);
+  byId('prefDate').value=t.toISOString().slice(0,10);
+
+  const box=byId('addons'); Object.entries(ADD_ONS).forEach(([label,price])=>{
+    const el=document.createElement('label'); el.className='tile';
+    el.innerHTML=`<span><input type="checkbox" data-price="${price}"> <strong>${label}</strong></span> <small>+ ${nf(price)}</small>`;
+    box.appendChild(el); el.querySelector('input').addEventListener('change', recalc);
+  });
+
+  ['photoFront','photoDriver','photoPassenger','photoRear'].forEach(id=>{
+    byId(id).addEventListener('change', e=>{
+      const f=e.target.files[0]; if(!f) return;
+      const r=new FileReader(); r.onload=()=>{const img=new Image(); img.src=r.result; byId('photoPreview').appendChild(img);};
+      r.readAsDataURL(f);
+    });
+  });
+
+  ['service','oilType','viscosity','capacity','promoInput'].forEach(id=>byId(id).addEventListener('change',recalc));
+  ['rotF','rotR','calF','calR','calB'].forEach(id=>{
+    const el=byId(id); el.addEventListener('change', ()=>{
+      if(id==='calB' && el.checked){ byId('calF').checked=false; byId('calR').checked=false; }
+      if((id==='calF'||id==='calR') && (byId('calF').checked||byId('calR').checked)) { byId('calB').checked=false; }
+      recalc();
+    });
+  });
+
+  byId('applyPromo').addEventListener('click', recalc);
+  byId('findTimes').addEventListener('click', loadTimes);
+  byId('decodeBtn').addEventListener('click', decodeVIN);
+  recalc();
+})();
+
+/* ==== VIN LOOKUP ==== */
+async function decodeVIN(){
+  let vin=(byId('vin').value||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
+  if(vin.length<11){ byId('decodeStatus').textContent='Enter at least 11 characters of VIN.'; return; }
+  byId('decodeStatus').textContent='Decoding VIN…';
+  try{
+    const r=await fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/decodevinvaluesextended/${vin}?format=json`,{cache:'no-store'});
+    const j=await r.json(), d=j?.Results?.[0]; if(!d) throw new Error('No result');
+    byId('year').value=d.ModelYear||''; byId('make').value=d.Make||''; byId('model').value=d.Model||'';
+    byId('engine').value=[d.EngineCylinders?`${d.EngineCylinders}-cyl`:'', d.DisplacementL?`${d.DisplacementL}L`:'' ].join(' ').trim();
+    if(!byId('capacity').value){
+      const L=parseFloat(d.DisplacementL||'0')||0; let cap=5.5;
+      if(L<1.7)cap=4.2; else if(L<2.6)cap=4.8; else if(L<3.6)cap=5.5; else if(L<5.1)cap=6.0; else if(L<6.1)cap=6.8; else cap=7.5;
+      byId('capacity').value=cap.toFixed(1); byId('capHelp').textContent='Estimated from engine size';
+    }
+    if(!byId('viscosity').value){
+      const yr=+d.ModelYear||0, body=(d.BodyClass||'').toLowerCase(), gvwr=parseFloat((d.GVWR||'').replace(/[^\d.]/g,'')||'0')||0;
+      let grade='5W-20'; if(yr>=2018)grade='0W-20'; if(body.includes('truck')||gvwr>=6000)grade='5W-30';
+      if((d.Aspiration||'').toLowerCase().includes('turbo'))grade='5W-30'; byId('viscosity').value=grade; byId('viscHelp').textContent='Recommended from VIN';
+    }
+    byId('decodeStatus').textContent='Vehicle found ✓';
+  }catch{ byId('decodeStatus').textContent='Couldn’t decode VIN; you can still book.'; }
+  updatePriceHints(); recalc();
+}
+
+/* ==== PRICE HELPERS ==== */
+function subclass(){
+  const t=(byId('model').value+' '+(byId('engine').value||'')).toLowerCase();
+  if(t.includes('truck')||t.includes('pickup'))return'truck';
+  if(t.includes('suv')||t.includes('utility')||t.includes('van'))return'suv';
+  if(t.includes('coupe')||t.includes('hatch')||t.includes('compact'))return'compact';
+  return'midsize';
+}
+function perAxle(k){const t=PRICING[k], cls=subclass(); return t[cls]??t.midsize;}
+function updatePriceHints(){
+  const b=perAxle('bundle'), r=perAxle('rotors'), c=perAxle('calipers');
+  byId('serviceHelp').textContent=`Pads per axle ~ ${nf(b)} | Rotors ~ ${nf(r)} | Calipers ~ ${nf(c)}`;
+  ['hintRotF','hintRotR'].forEach(id=>byId(id).textContent='+'+nf(r));
+  ['hintCalF','hintCalR'].forEach(id=>byId(id).textContent='+'+nf(c));
+  byId('hintCalB').textContent='+'+nf(c*2);
+}
+
+/* ==== AVAILABILITY ==== */
+async function loadTimes(){
+  const date=byId('prefDate').value, serviceKey=byId('service').value, sel=byId('prefSlot');
+  setSelectPlaceholder(sel,'Loading times…'); sel.disabled=true; byId('calHelp').textContent='';
+  if(!serviceKey){ byId('calHelp').textContent='Select a service first'; setSelectPlaceholder(sel,'Select a time…'); return; }
+  if(!date){ byId('calHelp').textContent='Pick a date'; setSelectPlaceholder(sel,'Select a time…'); return; }
+  const appointmentTypeID = ACUITY_TYPES[serviceKey]; if(!appointmentTypeID){ byId('calHelp').textContent='Missing Acuity ID'; return; }
+
+  try{
+    const u=new URL(GAS_ENDPOINT); u.searchParams.set('path','times'); u.searchParams.set('appointmentTypeID',String(appointmentTypeID)); u.searchParams.set('date',date);
+    if(String(STAFF_CALENDAR_ID||'').trim()) u.searchParams.set('calendarID', String(STAFF_CALENDAR_ID).trim());
+    const res=await fetch(u, {mode:'cors', cache:'no-store'}); const j=await res.json();
+    if(!j || j.ok===false){ byId('calHelp').textContent=(j && j.error) ? `Error: ${j.error}` : 'Error loading'; setSelectPlaceholder(sel,'No times'); sel.disabled=true; return; }
+    const slots = (j.slots||[]).map(s=>s.time||'').filter(Boolean);
+    setSelectPlaceholder(sel,'Select a time…');
+    if(slots.length===0){ byId('calHelp').textContent='No times for that date.'; setSelectPlaceholder(sel,'No times'); sel.disabled=true; return; }
+    for(const t of slots){
+      const iso = t.includes('T') ? t : t.replace(' ','T');
+      const hasTZ = /[zZ]|[+-]\d{2}:\d{2}$/.test(iso);
+      const d = new Date(hasTZ ? iso : iso+'Z');
+      if(isNaN(d.getTime())) continue;
+      const v = `${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
+      const label = d.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'});
+      const o=document.createElement('option'); o.value=v; o.textContent=label; sel.appendChild(o);
+    }
+    sel.disabled=false; byId('calHelp').textContent=`${sel.options.length-1} time(s) available.`;
+  }catch(e){ console.error(e); byId('calHelp').textContent='Network error.'; setSelectPlaceholder(sel,'Error loading'); sel.disabled=true; }
+}
+
+/* ==== CART & PAYMENT ==== */
+function recalc(){
+  let items=0, lines=[];
+  const s=byId('service').value || '';
+  const hasOil=(s==='oil' || s==='oil_both');
+  if(hasOil){
+    items+=PRICING.oilBase; lines.push(['Oil Change (incl. 5 qts)', PRICING.oilBase]);
+    if(byId('oilType').value==='syn'){ items+=PRICING.synUp; lines.push(['Full Synthetic Upcharge', PRICING.synUp]); }
+    const cap=parseFloat(byId('capacity').value || '5.5'), extra=Math.max(0, cap-5);
+    if(extra>0){ const add=extra*PRICING.extraQt; items+=add; lines.push([`Extra Oil (${extra.toFixed(1)} qts)`, add]); }
+    if(byId('viscosity').value) lines.push([`Oil Grade ${byId('viscosity').value}`, 0]);
+  }
+  const per=perAxle('bundle');
+  if(s==='brakes_front'){ items+=per; lines.push(['Front Brake Pads (Bundle)', per]); }
+  if(s==='brakes_rear'){ items+=per; lines.push(['Rear Brake Pads (Bundle)', per]); }
+  if(s==='brakes_both' || s==='oil_both'){ items+=per*2; lines.push(['Front & Rear Brake Pads (Bundle)', per*2]); }
+  const pR=perAxle('rotors'), pC=perAxle('calipers');
+  if(byId('rotF')?.checked){ items+=pR; lines.push(['Rotors (Front, pair)', pR]); }
+  if(byId('rotR')?.checked){ items+=pR; lines.push(['Rotors (Rear, pair)', pR]); }
+  if(byId('calB')?.checked){ items+=pC*2; lines.push(['Calipers (Front & Rear)', pC*2]); }
+  else{
+    if(byId('calF')?.checked){ items+=pC; lines.push(['Calipers (Front, pair)', pC]); }
+    if(byId('calR')?.checked){ items+=pC; lines.push(['Calipers (Rear, pair)', pC]); }
+  }
+  document.querySelectorAll('#addons input[type="checkbox"]:checked').forEach(ch=>{
+    const p=parseFloat(ch.dataset.price||'0'); items+=p; lines.push([ch.parentElement.innerText.trim(), p]);
+  });
+
+  const discounted = items;
+  const overhead   = discounted * OVERHEAD;
+  const taxable    = discounted + overhead;
+  const tax        = taxable * TAX;
+  const total      = taxable + tax;
+
+  byId('lines').innerHTML = lines.length ? lines.map(([l,a])=>`<tr><td>${l}</td><td>${nf(a)}</td></tr>`).join('') : `<tr><td class="note">No items yet</td><td class="note">$0.00</td></tr>`;
+  byId('discountRow').style.display='none';
+  byId('total').textContent = nf(total);
+
+  updateCheckoutState();
+  return { total, tax, overhead, items };
+}
+
+function missing(){
+  const need=[]; ['firstName','lastName','phone','email','addr','city','state','zip','service','prefDate','prefSlot'].forEach(id=>{ if(!byId(id).value) need.push(id); });
+  return need;
+}
+function updateCheckoutState(){
+  const need = missing();
+  byId('cashOut').disabled = need.length > 0;
+  byId('submitNote').textContent = need.length ? ('Missing: '+need.join(', ')) : '';
+}
+
+/* Pay & Book with Stripe Checkout */
+byId('cashOut').addEventListener('click', async ()=>{
+  const need = missing(); if(need.length){ updateCheckoutState(); return; }
+  const serviceKey = byId('service').value;
+  const appointmentTypeID = ACUITY_TYPES[serviceKey];
+  if(!appointmentTypeID){ byId('submitNote').textContent='Missing service mapping'; return; }
+
+  const whenLocal = `${byId('prefDate').value} ${byId('prefSlot').value}:00`;
+
+  const totText = (byId('total').textContent || '0').replace(/[^0-9.]/g,'') || '0';
+  const amountCents = Math.round(parseFloat(totText) * 100);
+
+  const payload = {
+    amountCents,
+    appointmentTypeID,
+    datetime: whenLocal,
+    firstName: byId('firstName').value,
+    lastName:  byId('lastName').value,
+    email:     byId('email').value,
+    phone:     byId('phone').value,
+    notes: [
+      `VIN:${byId('vin').value||''}`,
+      `Oil:${byId('capacity').value||''}qts ${byId('viscosity').value||''}`,
+      `Addr:${byId('addr').value}, ${byId('city').value}, ${byId('state').value} ${byId('zip').value}`,
+      `Tech:${byId('techNotes').value||''}`
+    ].join(' | ')
+  };
+
+  byId('cashOut').disabled = true;
+  byId('submitNote').textContent = 'Creating checkout…';
+
+  try{
+    const u = new URL(GAS_ENDPOINT); u.searchParams.set('path','stripe_create'); u.searchParams.set('origin', location.origin);
+    const res = await fetch(u, { method:'POST', headers:{'Content-Type':'text/plain'}, body: JSON.stringify(payload) });
+    const j = await res.json();
+    if(!j.ok || !j.url){ throw new Error(j.error || 'Failed to create Checkout session'); }
+    location.href = j.url;
+  }catch(e){
+    console.error(e);
+    byId('submitNote').textContent = 'Error: '+ e.message;
+    byId('cashOut').disabled = false;
+  }
+});
+</script>
+</body>
+</html>

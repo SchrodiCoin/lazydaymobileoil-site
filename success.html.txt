@@ -1,0 +1,49 @@
+<!-- File: success.html (Frontend – returns from Stripe, confirms & books) -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Booking – Processing Payment</title>
+<style>
+body{margin:0;font:16px/1.5 system-ui,Arial;background:#F7F1E6;color:#0f172a}
+.wrap{max-width:720px;margin:40px auto;padding:20px;background:#fff;border:1px solid #e5e7eb;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,.06)}
+h1{margin:0 0 8px} .note{color:#6b7280}
+pre{white-space:pre-wrap;background:#f8fafc;border:1px solid #e5e7eb;border-radius:8px;padding:10px}
+.btn{display:inline-block;margin-top:12px;padding:10px 14px;border-radius:10px;background:#C7382E;color:#fff;text-decoration:none;font-weight:800}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Processing your payment…</h1>
+  <p class="note" id="msg">Please hold while we confirm your payment and create the appointment.</p>
+  <pre id="out"></pre>
+  <a class="btn" id="home" href="/">Back to site</a>
+</div>
+<script>
+const GAS_ENDPOINT = "https://script.google.com/macros/s/AKfycbxFTeIkWPXlVRVSmtAWX4sVkKyGv1I1aXqq8Jj9HL5B5WMq3cOfn_Oj2B2XpY9apdUMBA/exec";
+function getParam(name){ return new URL(location.href).searchParams.get(name); }
+
+(async function run(){
+  const sid = getParam('session_id');
+  const out = document.getElementById('out'), msg = document.getElementById('msg');
+  if(!sid){ msg.textContent = 'Missing session_id in URL.'; return; }
+
+  try{
+    const u = new URL(GAS_ENDPOINT); u.searchParams.set('path','stripe_confirm'); u.searchParams.set('session_id', sid);
+    const r = await fetch(u, { mode:'cors', cache:'no-store' }); const j = await r.json();
+    if(!j.ok){
+      msg.textContent = 'Payment confirmed, but booking failed: ' + (j.error || 'Unknown error');
+      out.textContent = JSON.stringify(j, null, 2);
+      return;
+    }
+    msg.textContent = 'All set! Your appointment is booked.';
+    out.textContent = JSON.stringify(j.appointment || j, null, 2);
+  }catch(e){
+    msg.textContent = 'Could not confirm payment.';
+    out.textContent = e.message;
+  }
+})();
+</script>
+</body>
+</html>
