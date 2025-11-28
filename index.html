@@ -231,17 +231,23 @@ function setAvailNote(msg) {
  * =============================== */
 
 function computeTotals() {
-  // Base oil service
-  let subtotal = PRICING.oilBase;
+  // Read current capacity
+  const qts = numVal("capacity"); // total qt capacity (0 if empty / invalid)
 
-  // Extra quarts over 5
-  const qts = numVal("capacity");    // assume this is total qt capacity
-  const extraQts = Math.max(0, qts - 5);
-  subtotal += extraQts * PRICING.extraQt;
+  let subtotal = 0;
+  let extraQts = 0;
 
-  // TODO: add any add-ons (wipers, filters, brakes) to subtotal here if desired
+  // Only charge for oil if we have a capacity number
+  if (qts > 0) {
+    subtotal += PRICING.oilBase;               // base service
+    extraQts = Math.max(0, qts - 5);           // anything over 5 qts
+    subtotal += extraQts * PRICING.extraQt;
+  }
 
-  // Tax
+  // TODO: add-ons & brakes can be added here later, e.g.:
+  // if (byId("rotorsFront")?.checked) subtotal += 199.99;
+
+  // Tax only on whatever subtotal we have
   const tax = subtotal * TAX_RATE;
   const total = subtotal + tax;
 
@@ -402,7 +408,7 @@ async function loadTimesForDate() {
       o.value = "";
       slotEl.appendChild(o);
       slotEl.disabled = true;
-      setAvailNote("No open times for that day.");
+      setAvailNote(json.error || "No open times for that day.");
       return;
     }
 
@@ -419,11 +425,11 @@ async function loadTimesForDate() {
     console.error("loadTimesForDate error", err);
     slotEl.innerHTML = "";
     const o = document.createElement("option");
-    o.textContent = "Acuity error – see admin";
+    o.textContent = "Acuity error 403";
     o.value = "";
     slotEl.appendChild(o);
     slotEl.disabled = true;
-    setAvailNote("Acuity error. Check Apps Script logs.");
+    setAvailNote("Acuity error – check API keys.");
   }
 }
 
@@ -526,7 +532,7 @@ function initLDMO() {
     });
   }
 
-  const vinBtn = byId("vinLookupBtn");  // Make sure your button has id="vinLookupBtn"
+  const vinBtn = byId("vinLookupBtn");  // your VIN button must have id="vinLookupBtn"
   if (vinBtn) {
     vinBtn.addEventListener("click", (e) => {
       e.preventDefault();
@@ -543,6 +549,7 @@ document.addEventListener("DOMContentLoaded", initLDMO);
 </script>
 </body>
 </html>
+
 
 
 
