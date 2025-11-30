@@ -1,4 +1,3 @@
-<!-- index.html – Lazy Day Mobile Oil booking (VIN + pricing + Acuity times + Stripe) -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -40,13 +39,10 @@
       color:var(--muted);
       font-size:14px;
     }
-    .grid{
-      display:grid;
-      gap:12px;
-    }
+    .grid{display:grid;gap:12px}
     @media(min-width:768px){
-      .grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
       .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
       .grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}
     }
     .card{
@@ -91,7 +87,7 @@
     .input:focus, select:focus{
       background:#fff;
       border-color:var(--brand);
-      box-shadow:0 0 0 1px var(--brand11);
+      box-shadow:0 0 0 1px rgba(15,23,42,.15);
     }
     .btn{
       border-radius:999px;
@@ -143,23 +139,15 @@
       background:#f9fafb;
       transition:background .12s, border-color .12s, transform .12s, box-shadow .12s;
     }
-    .pill-check input{
-      margin:0;
-    }
+    .pill-check input{margin:0}
     .pill-check.active{
       background:#eef2ff;
       border-color:var(--brand);
       box-shadow:0 0 0 1px rgba(37,99,235,.25);
       transform:translateY(-1px);
     }
-    .pill-label-main{
-      font-weight:600;
-      font-size:13px;
-    }
-    .pill-label-sub{
-      font-size:11px;
-      color:var(--muted);
-    }
+    .pill-label-main{font-weight:600;font-size:13px}
+    .pill-label-sub{font-size:11px;color:var(--muted)}
     .section-footnote{
       font-size:12px;
       color:var(--muted);
@@ -171,10 +159,7 @@
       font-size:14px;
       margin:2px 0;
     }
-    .cart-row.muted{
-      color:var(--muted);
-      font-size:13px;
-    }
+    .cart-row.muted{color:var(--muted);font-size:13px}
     .cart-row.total{
       margin-top:8px;
       padding-top:8px;
@@ -193,11 +178,7 @@
       text-transform:uppercase;
       letter-spacing:.06em;
     }
-    .msg{
-      font-size:12px;
-      margin-top:4px;
-      color:var(--muted);
-    }
+    .msg{font-size:12px;margin-top:4px;color:var(--muted)}
     .msg-error{color:#b91c1c}
     .flex{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
     .mt-2{margin-top:8px}
@@ -208,7 +189,61 @@
 <body>
   <div class="wrap">
     <h1 class="h1">Lazy Day Mobile Oil</h1>
-    <p class="sub">You relax&mdash;we come to you. Use your VIN to auto-fill vehicle details, pick services, then choose a time and pay securely.</p>
+    <p class="sub">You relax — we come to you. Use your VIN to auto-fill vehicle details, pick services, add photos, then choose a time and pay securely.</p>
+
+    <!-- CUSTOMER -->
+    <section class="card" id="cust-section">
+      <div class="card-header">
+        <h2 class="card-title">Contact</h2>
+      </div>
+      <div class="grid grid-2">
+        <div>
+          <div class="label">First Name</div>
+          <input id="firstName" class="input" autocomplete="given-name" />
+        </div>
+        <div>
+          <div class="label">Last Name</div>
+          <input id="lastName" class="input" autocomplete="family-name" />
+        </div>
+      </div>
+      <div class="grid grid-2 mt-3">
+        <div>
+          <div class="label">Mobile Phone</div>
+          <input id="phone" class="input" autocomplete="tel" />
+        </div>
+        <div>
+          <div class="label">Email</div>
+          <input id="email" class="input" autocomplete="email" />
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICE ADDRESS -->
+    <section class="card" id="addr-section">
+      <div class="card-header">
+        <h2 class="card-title">Service Address</h2>
+      </div>
+      <div class="grid grid-2">
+        <div>
+          <div class="label">Street</div>
+          <input id="svcStreet" class="input" autocomplete="address-line1" />
+        </div>
+        <div>
+          <div class="label">City</div>
+          <input id="svcCity" class="input" autocomplete="address-level2" />
+        </div>
+      </div>
+      <div class="grid grid-3 mt-3">
+        <div>
+          <div class="label">State</div>
+          <input id="svcState" class="input" value="IN" maxlength="2" />
+        </div>
+        <div>
+          <div class="label">ZIP</div>
+          <input id="svcZip" class="input" autocomplete="postal-code" />
+        </div>
+      </div>
+    </section>
 
     <!-- VIN -->
     <section class="card" id="vin-section">
@@ -261,11 +296,37 @@
           </select>
         </div>
       </div>
-      <div class="msg">VIN lookup helps us estimate oil capacity and confirm the right parts. You can still book if VIN fails&mdash;just fill in the basics.</div>
+      <div class="msg">VIN lookup helps us estimate oil capacity and confirm the right parts. You can still book if VIN fails — just fill in the basics.</div>
       <div id="vin-msg" class="msg msg-error" style="display:none"></div>
     </section>
 
-    <!-- Services -->
+    <!-- VEHICLE PHOTOS -->
+    <section class="card" id="photos-section">
+      <div class="card-header">
+        <h2 class="card-title">Vehicle Photos</h2>
+      </div>
+      <div class="grid grid-4">
+        <div>
+          <div class="label">Front</div>
+          <input id="photoFront" type="file" class="input" accept="image/*" />
+        </div>
+        <div>
+          <div class="label">Driver Side</div>
+          <input id="photoDriver" type="file" class="input" accept="image/*" />
+        </div>
+        <div>
+          <div class="label">Passenger Side</div>
+          <input id="photoPassenger" type="file" class="input" accept="image/*" />
+        </div>
+        <div>
+          <div class="label">Rear</div>
+          <input id="photoRear" type="file" class="input" accept="image/*" />
+        </div>
+      </div>
+      <div class="msg">Photos help us see wheels, rust, and access. Optional but recommended.</div>
+    </section>
+
+    <!-- SERVICES -->
     <section class="card" id="services-section">
       <div class="card-header">
         <h2 class="card-title">Services</h2>
@@ -355,7 +416,7 @@
       </div>
     </section>
 
-    <!-- Date & Time -->
+    <!-- DATE & TIME -->
     <section class="card" id="time-section">
       <div class="card-header">
         <h2 class="card-title">Preferred Date &amp; Time</h2>
@@ -378,7 +439,7 @@
       <div id="time-msg" class="msg"></div>
     </section>
 
-    <!-- Cart / payment -->
+    <!-- CART / PAY -->
     <section class="card" id="cart-section">
       <div class="card-header">
         <h2 class="card-title">Your Cart</h2>
@@ -391,10 +452,7 @@
           <span>Indiana Sales Tax (7%)</span>
           <span id="cart-tax">$0.00</span>
         </div>
-        <div class="cart-row muted">
-          <span>$5 Convenience Fee</span>
-          <span id="cart-fee">$5.00</span>
-        </div>
+        <!-- No convenience fee line; fee = 0 -->
         <div class="cart-row total">
           <span>Total</span>
           <span id="cart-total">$0.00</span>
@@ -409,15 +467,15 @@
   </div>
 
   <script>
-    // === CONFIG (CLIENT) ===
-    const CALENDAR_ENDPOINT = "https://script.google.com/macros/s/REPLACE_WITH_YOUR_DEPLOYMENT/exec"; // replace with your Web App URL
+    // === CONFIG – REPLACE WITH YOUR WEB APP URL ===
+    const CALENDAR_ENDPOINT =
+      "https://script.google.com/macros/s/PASTE_YOUR_WEB_APP_ID_HERE/exec"; // <<<<<< CHANGE THIS ONLY
 
     const TAX = 0.07;
-    const OVERHEAD_RATE = 0.065;           // 6.5% overhead (hidden)
-    const CONVENIENCE_FEE = 5.0;           // $5 fee, shown at bottom
+    const OVERHEAD_RATE = 0.065;       // 6.5% overhead (hidden)
+    const CONVENIENCE_FEE = 0.0;       // no $5 fee now
 
     const PRICING = {
-      // Primary service base prices (before overhead & tax)
       primary: {
         "oil-basic": 109.99,
         "oil-syn": 139.99,
@@ -425,13 +483,11 @@
         "brakes-rear": 289.99,
         "brakes-all": 529.99,
       },
-      // Extra per quart beyond 5qts
       extraQt: {
         conv: 7.99,
         "syn-blend": 9.99,
         "full-syn": 12.99,
       },
-      // Addons
       addons: {
         "rotors-front": 249.99,
         "rotors-rear": 249.99,
@@ -443,12 +499,21 @@
       }
     };
 
-    // === DOM ELEMENTS ===
+    // DOM
+    const firstNameInput = document.getElementById('firstName');
+    const lastNameInput  = document.getElementById('lastName');
+    const phoneInput     = document.getElementById('phone');
+    const emailInput     = document.getElementById('email');
+
+    const svcStreetInput = document.getElementById('svcStreet');
+    const svcCityInput   = document.getElementById('svcCity');
+    const svcStateInput  = document.getElementById('svcState');
+    const svcZipInput    = document.getElementById('svcZip');
+
     const vinInput         = document.getElementById('vin');
     const vinBtn           = document.getElementById('vin-lookup-btn');
     const vinDemoBtn       = document.getElementById('vin-demo-btn');
     const vinMsg           = document.getElementById('vin-msg');
-
     const yearInput        = document.getElementById('year');
     const makeInput        = document.getElementById('make');
     const modelInput       = document.getElementById('model');
@@ -456,40 +521,44 @@
     const oilCapacityInput = document.getElementById('oilCapacity');
     const oilGradeSelect   = document.getElementById('oilGrade');
 
+    const photoFrontInput     = document.getElementById('photoFront');
+    const photoDriverInput    = document.getElementById('photoDriver');
+    const photoPassengerInput = document.getElementById('photoPassenger');
+    const photoRearInput      = document.getElementById('photoRear');
+
     const primaryServiceSelect = document.getElementById('primaryService');
     const oilTypeSelect        = document.getElementById('oilType');
 
-    const prefDateInput   = document.getElementById('prefDate');
-    const prefTimeSelect  = document.getElementById('prefTime');
-    const checkTimesBtn   = document.getElementById('checkTimesBtn');
-    const timeMsg         = document.getElementById('time-msg');
+    const prefDateInput  = document.getElementById('prefDate');
+    const prefTimeSelect = document.getElementById('prefTime');
+    const checkTimesBtn  = document.getElementById('checkTimesBtn');
+    const timeMsg        = document.getElementById('time-msg');
 
-    const cartLines       = document.getElementById('cart-lines');
-    const cartTaxEl       = document.getElementById('cart-tax');
-    const cartFeeEl       = document.getElementById('cart-fee');
-    const cartTotalEl     = document.getElementById('cart-total');
-    const payBtn          = document.getElementById('payBtn');
-    const payMsg          = document.getElementById('pay-msg');
+    const cartLines   = document.getElementById('cart-lines');
+    const cartTaxEl   = document.getElementById('cart-tax');
+    const cartTotalEl = document.getElementById('cart-total');
+    const payBtn      = document.getElementById('payBtn');
+    const payMsg      = document.getElementById('pay-msg');
 
     const addonPills = Array.from(document.querySelectorAll('[data-addon]'));
 
-    // === HELPERS ===
+    // helpers
     function fmt(n){ return "$" + n.toFixed(2); }
 
     function getOilCapacity(){
       const v = parseFloat(oilCapacityInput.value);
       if (!isNaN(v) && v > 0) return v;
-      return 5; // default
+      return 5;
     }
 
-    // === PRICING / CART ===
+    // PRICING
     let latestQuote = {
       items:[],
       subtotal:0,
       overhead:0,
       tax:0,
       fee:CONVENIENCE_FEE,
-      total:0,
+      total:0
     };
 
     function recalcPricing(){
@@ -508,14 +577,12 @@
       const items = [];
       let subtotal = 0;
 
-      // primary
       const basePrice = PRICING.primary[primaryKey] || 0;
-      if(basePrice>0){
+      if(basePrice > 0){
         items.push({label: primaryServiceSelect.options[primaryServiceSelect.selectedIndex].text, amount: basePrice});
         subtotal += basePrice;
       }
 
-      // extra qts beyond 5
       if(primaryKey.startsWith("oil")){
         const extra = Math.max(0, qts - 5);
         if(extra > 0){
@@ -526,21 +593,21 @@
         }
       }
 
-      // addons
       addonPills.forEach(p=>{
         const key = p.getAttribute('data-addon');
-        const checked = p.querySelector('input[type="checkbox"]').checked;
+        const cb  = p.querySelector('input[type="checkbox"]');
+        const checked = cb.checked;
         p.classList.toggle('active', checked);
         if(!checked) return;
         const price = PRICING.addons[key] || 0;
-        if(price>0){
+        if(price > 0){
           const labelMain = p.querySelector('.pill-label-main').textContent.trim();
           items.push({label:labelMain, amount:price});
           subtotal += price;
         }
       });
 
-      const overhead = subtotal * OVERHEAD_RATE;   // hidden
+      const overhead = subtotal * OVERHEAD_RATE;
       const taxBase  = subtotal + overhead + CONVENIENCE_FEE;
       const tax      = taxBase * TAX;
       const total    = taxBase + tax;
@@ -561,7 +628,6 @@
       if(!latestQuote.items.length){
         cartLines.textContent = "No items yet.";
         cartTaxEl.textContent   = fmt(0);
-        cartFeeEl.textContent   = fmt(CONVENIENCE_FEE);
         cartTotalEl.textContent = fmt(0);
         payBtn.disabled = true;
         return;
@@ -575,15 +641,12 @@
         cartLines.appendChild(row);
       });
 
-      // we keep overhead hidden; cart shows only tax, fee, total
       cartTaxEl.textContent   = fmt(latestQuote.tax);
-      cartFeeEl.textContent   = fmt(latestQuote.fee);
       cartTotalEl.textContent = fmt(latestQuote.total);
-
       payBtn.disabled = false;
     }
 
-    // === VIN LOOKUP ===
+    // VIN LOOKUP
     async function handleVinLookup(){
       const vin = vinInput.value.trim();
       vinMsg.style.display = "none";
@@ -617,7 +680,7 @@
           oilGradeSelect.value = data.oilGrade;
         }
 
-        recalcPricing();
+        recalcPricing(); // auto-update based on new capacity
       }catch(err){
         console.error(err);
         vinMsg.textContent = err.message;
@@ -628,13 +691,10 @@
       }
     }
 
-    // Demo VIN button (just fills in a known good VIN)
     vinDemoBtn.addEventListener('click', ()=>{
       vinInput.value = "1GT49VEY4RF249205";
     });
-
     vinBtn.addEventListener('click', handleVinLookup);
-
     vinInput.addEventListener('keydown', e=>{
       if(e.key === "Enter"){
         e.preventDefault();
@@ -642,7 +702,7 @@
       }
     });
 
-    // === TIME / ACUITY ===
+    // TIME / ACUITY
     async function handleCheckTimes(){
       timeMsg.textContent = "";
       const date = prefDateInput.value;
@@ -657,17 +717,16 @@
         return;
       }
 
-      // simple mapping – adjust appointmentTypeID to match your Acuity service IDs
       let appointmentTypeID = "";
       switch(primaryKey){
         case "oil-basic":
         case "oil-syn":
-          appointmentTypeID = "1"; // replace with real Acuity type id
+          appointmentTypeID = "1"; // TODO: replace with your real Acuity type IDs
           break;
         case "brakes-front":
         case "brakes-rear":
         case "brakes-all":
-          appointmentTypeID = "2"; // replace with real id
+          appointmentTypeID = "2";
           break;
         default:
           appointmentTypeID = "1";
@@ -710,7 +769,18 @@
 
     checkTimesBtn.addEventListener('click', handleCheckTimes);
 
-    // === PAYMENT ===
+    // PAYMENT
+    function fileToBase64(input){
+      return new Promise(resolve=>{
+        const file = input.files && input.files[0];
+        if(!file) return resolve(null);
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => resolve(null);
+        reader.readAsDataURL(file);
+      });
+    }
+
     async function handlePay(){
       payMsg.style.display = "none";
       payMsg.textContent = "";
@@ -725,9 +795,21 @@
         payMsg.style.display = "block";
         return;
       }
+      if(!firstNameInput.value || !phoneInput.value || !svcStreetInput.value){
+        payMsg.textContent = "Please enter contact + service address.";
+        payMsg.style.display = "block";
+        return;
+      }
 
       payBtn.disabled = true;
       payBtn.textContent = "Creating payment...";
+
+      const metaPhotos = {
+        front: await fileToBase64(photoFrontInput),
+        driver: await fileToBase64(photoDriverInput),
+        passenger: await fileToBase64(photoPassengerInput),
+        rear: await fileToBase64(photoRearInput)
+      };
 
       const payload = {
         path: "create-payment-intent",
@@ -735,6 +817,15 @@
         currency: "usd",
         description: "Lazy Day Mobile Oil Service",
         meta: {
+          firstName: firstNameInput.value,
+          lastName:  lastNameInput.value,
+          phone:     phoneInput.value,
+          email:     emailInput.value,
+          serviceStreet: svcStreetInput.value,
+          serviceCity:   svcCityInput.value,
+          serviceState:  svcStateInput.value,
+          serviceZip:    svcZipInput.value,
+
           vin: vinInput.value.trim(),
           year: yearInput.value,
           make: makeInput.value,
@@ -744,10 +835,13 @@
           oilGrade: oilGradeSelect.value,
           primaryService: primaryServiceSelect.value,
           oilType: oilTypeSelect.value,
-          addons: addonPills.filter(p=>p.querySelector('input').checked).map(p=>p.getAttribute('data-addon')),
+          addons: addonPills
+            .filter(p=>p.querySelector('input').checked)
+            .map(p=>p.getAttribute('data-addon')),
           date: prefDateInput.value,
           time: prefTimeSelect.value,
-          quote: latestQuote
+          quote: latestQuote,
+          photos: metaPhotos
         }
       };
 
@@ -758,12 +852,10 @@
           body: JSON.stringify(payload)
         });
         const data = await res.json();
-
         if(!data.ok){
           throw new Error(data.error || "Payment session failed");
         }
 
-        // For now we just show a success message; front-end Stripe integration can be added.
         alert("Order received! We will confirm your appointment shortly.");
       }catch(err){
         console.error(err);
@@ -777,7 +869,7 @@
 
     payBtn.addEventListener('click', handlePay);
 
-    // Recalculate pricing on changes
+    // Wiring
     primaryServiceSelect.addEventListener('change', recalcPricing);
     oilTypeSelect.addEventListener('change', recalcPricing);
     addonPills.forEach(p=>{
@@ -785,8 +877,6 @@
       cb.addEventListener('change', recalcPricing);
     });
 
-    // init
-    cartFeeEl.textContent = fmt(CONVENIENCE_FEE);
     recalcPricing();
   </script>
 </body>
