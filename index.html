@@ -148,8 +148,6 @@
       box-shadow:0 0 0 1px rgba(37,99,235,.25);
       transform:translateY(-1px);
     }
-    .pill-label-main{font-weight:600;font-size:13px}
-    .pill-label-sub{font-size:11px;color:var(--muted)}
     .cart-row{
       display:flex;
       justify-content:space-between;
@@ -174,6 +172,19 @@
   <div class="wrap">
     <h1 class="h1">Lazy Day Mobile Oil</h1>
     <p class="sub">You relax — we come to you. Use your VIN to auto-fill vehicle details, upload photos, select services, pick a time, and pay securely.</p>
+
+    <!-- CUSTOMER (NEW) -->
+    <section class="card">
+      <div class="card-header"><h2 class="card-title">Customer</h2></div>
+      <div class="grid grid-2">
+        <div><div class="label">First Name</div><input id="firstName" class="input"></div>
+        <div><div class="label">Last Name</div><input id="lastName" class="input"></div>
+      </div>
+      <div class="grid grid-2 mt-3">
+        <div><div class="label">Phone</div><input id="phone" class="input"></div>
+        <div><div class="label">Email</div><input id="email" class="input"></div>
+      </div>
+    </section>
 
     <!-- SERVICE ADDRESS -->
     <section class="card">
@@ -332,7 +343,11 @@
       }
     };
 
-    // DOM refs
+    const firstNameInput = document.getElementById("firstName");
+    const lastNameInput  = document.getElementById("lastName");
+    const phoneInput     = document.getElementById("phone");
+    const emailInput     = document.getElementById("email");
+
     const vinInput = document.getElementById("vin");
     const vinBtn = document.getElementById("vin-lookup-btn");
     const vinDemoBtn = document.getElementById("vin-demo-btn");
@@ -346,27 +361,28 @@
 
     const primaryServiceSelect = document.getElementById("primaryService");
     const oilTypeSelect = document.getElementById("oilType");
+
     const prefDateInput = document.getElementById("prefDate");
     const prefTimeSelect = document.getElementById("prefTime");
     const checkTimesBtn = document.getElementById("checkTimesBtn");
     const timeMsg = document.getElementById("time-msg");
 
-    const cartLines = document.getElementById("cart-lines");
-    const cartTaxEl = document.getElementById("cart-tax");
+    const cartLines   = document.getElementById("cart-lines");
+    const cartTaxEl   = document.getElementById("cart-tax");
     const cartTotalEl = document.getElementById("cart-total");
-    const payBtn = document.getElementById("payBtn");
-    const payMsg = document.getElementById("pay-msg");
+    const payBtn      = document.getElementById("payBtn");
+    const payMsg      = document.getElementById("pay-msg");
 
     const svcStreetInput = document.getElementById("svcStreet");
-    const svcCityInput = document.getElementById("svcCity");
-    const svcStateInput = document.getElementById("svcState");
-    const svcZipInput = document.getElementById("svcZip");
-    const svcNotesInput = document.getElementById("svcNotes");
+    const svcCityInput   = document.getElementById("svcCity");
+    const svcStateInput  = document.getElementById("svcState");
+    const svcZipInput    = document.getElementById("svcZip");
+    const svcNotesInput  = document.getElementById("svcNotes");
 
-    const photoFrontInput = document.getElementById("photoFront");
-    const photoDriverInput = document.getElementById("photoDriver");
+    const photoFrontInput     = document.getElementById("photoFront");
+    const photoDriverInput    = document.getElementById("photoDriver");
     const photoPassengerInput = document.getElementById("photoPassenger");
-    const photoRearInput = document.getElementById("photoRear");
+    const photoRearInput      = document.getElementById("photoRear");
 
     const addonPills = Array.from(document.querySelectorAll("[data-addon]"));
 
@@ -376,13 +392,7 @@
       return isNaN(v)||v<=0 ? 5 : v;
     }
 
-    let latestQuote = {
-      items:[],
-      subtotal:0,
-      overhead:0,
-      tax:0,
-      total:0
-    };
+    let latestQuote = {items:[],subtotal:0,overhead:0,tax:0,total:0};
 
     function recalcPricing(){
       const svc = primaryServiceSelect.value;
@@ -393,10 +403,8 @@
         payBtn.disabled = true;
         return;
       }
-
       const oilTypeKey = oilTypeSelect.value || "conv";
       const qts = getOilCapacity();
-
       const items = [];
       let subtotal = 0;
 
@@ -419,7 +427,7 @@
 
       addonPills.forEach(p=>{
         const key = p.dataset.addon;
-        const cb = p.querySelector("input");
+        const cb  = p.querySelector("input");
         p.classList.toggle("active", cb.checked);
         if(!cb.checked) return;
         const price = PRICING.addons[key] || 0;
@@ -428,9 +436,9 @@
       });
 
       const overhead = subtotal * OVERHEAD_RATE;
-      const taxBase = subtotal + overhead + CONVENIENCE_FEE;
-      const tax = taxBase * TAX;
-      const total = taxBase + tax;
+      const taxBase  = subtotal + overhead + CONVENIENCE_FEE;
+      const tax      = taxBase * TAX;
+      const total    = taxBase + tax;
 
       latestQuote = {items, subtotal, overhead, tax, total};
       renderCart();
@@ -448,12 +456,11 @@
         row.innerHTML = `<span>${it.label}</span><span>${fmt(it.amount)}</span>`;
         cartLines.appendChild(row);
       });
-      cartTaxEl.textContent = fmt(latestQuote.tax);
+      cartTaxEl.textContent   = fmt(latestQuote.tax);
       cartTotalEl.textContent = fmt(latestQuote.total);
       payBtn.disabled = false;
     }
 
-    // VIN lookup
     async function handleVinLookup(){
       vinMsg.style.display = "none";
       vinMsg.textContent = "";
@@ -470,10 +477,10 @@
         const res = await fetch(url);
         const data = await res.json();
         if(!data.ok) throw new Error(data.error || "VIN lookup failed");
-        yearInput.value = data.year || "";
-        makeInput.value = data.make || "";
-        modelInput.value = data.model || "";
-        engineInput.value = data.engine || "";
+        yearInput.value        = data.year   || "";
+        makeInput.value        = data.make   || "";
+        modelInput.value       = data.model  || "";
+        engineInput.value      = data.engine || "";
         oilCapacityInput.value = data.oilQts != null ? data.oilQts : "";
         recalcPricing();
       }catch(err){
@@ -495,7 +502,6 @@
       }
     });
 
-    // Time check (no formatting/filtering)
     async function handleCheckTimes(){
       timeMsg.textContent = "";
       const date = prefDateInput.value;
@@ -504,7 +510,7 @@
       if(!date){ timeMsg.textContent="Choose a date first."; return; }
       if(!svc){ timeMsg.textContent="Choose a primary service first."; return; }
 
-      let appointmentTypeID = "85364590"; // Oil change by default
+      let appointmentTypeID = "85364590"; // Oil change default
       if(svc==="brakes-front") appointmentTypeID = "85364671";
       if(svc==="brakes-rear")  appointmentTypeID = "85364740";
       if(svc==="brakes-all")   appointmentTypeID = "85364836";
@@ -521,9 +527,10 @@
         const times = data.times || [];
         prefTimeSelect.innerHTML = `<option value="">Select a time…</option>`;
         times.forEach(t=>{
+          const label = t.includes("T") ? t.split("T")[1].slice(0,5) : t; // basic label (HH:MM)
           const opt = document.createElement("option");
-          opt.value = t;
-          opt.textContent = t;   // raw from Acuity (ISO or label)
+          opt.value = t;      // full Acuity value (keeps functionality)
+          opt.textContent = label; // only time portion
           prefTimeSelect.appendChild(opt);
         });
 
@@ -541,7 +548,7 @@
 
     checkTimesBtn.addEventListener("click", handleCheckTimes);
 
-    // Payment stub (Stripe via Apps Script; unchanged)
+    // simple payment stub – backend does real Stripe work
     async function handlePay(){
       payMsg.style.display = "none";
       payMsg.textContent = "";
@@ -555,17 +562,19 @@
         payMsg.style.display = "block";
         return;
       }
-      // Just send order to backend; frontend Stripe handled by Apps Script
       payBtn.disabled = true;
       payBtn.textContent = "Sending…";
       try{
-        const photos = {}; // you can wire up base64 here later if needed
         const payload = {
           path:"create-payment-intent",
           amount:Math.round(latestQuote.total*100),
           currency:"usd",
           description:"Lazy Day Mobile Oil Service",
           meta:{
+            firstName:firstNameInput.value,
+            lastName:lastNameInput.value,
+            phone:phoneInput.value,
+            email:emailInput.value,
             serviceStreet:svcStreetInput.value,
             serviceCity:svcCityInput.value,
             serviceState:svcStateInput.value,
@@ -583,8 +592,7 @@
             addons:addonPills.filter(p=>p.querySelector("input").checked).map(p=>p.dataset.addon),
             date:prefDateInput.value,
             time:prefTimeSelect.value,
-            quote:latestQuote,
-            photos
+            quote:latestQuote
           }
         };
         const res = await fetch(CALENDAR_ENDPOINT,{
