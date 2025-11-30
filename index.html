@@ -191,63 +191,114 @@
 <body>
   <div class="wrap">
     <h1 class="h1">Lazy Day Mobile Oil</h1>
-    <p class="sub">You relax — we come to you. Use your VIN to auto-fill vehicle details, upload photos, select services, pick a time, and pay securely.</p>
+    <p class="sub">You relax — we come to you. Use your VIN to auto-fill vehicle details, pick services, add photos, then choose a time and pay securely.</p>
 
     <!-- CUSTOMER -->
-    <section class="card">
-      <div class="card-header"><h2 class="card-title">Contact</h2></div>
+    <section class="card" id="cust-section">
+      <div class="card-header">
+        <h2 class="card-title">Contact</h2>
+      </div>
       <div class="grid grid-2">
-        <div><div class="label">First Name</div><input id="firstName" class="input"/></div>
-        <div><div class="label">Last Name</div><input id="lastName" class="input"/></div>
+        <div>
+          <div class="label">First Name</div>
+          <input id="firstName" class="input" autocomplete="given-name" />
+        </div>
+        <div>
+          <div class="label">Last Name</div>
+          <input id="lastName" class="input" autocomplete="family-name" />
+        </div>
       </div>
       <div class="grid grid-2 mt-3">
-        <div><div class="label">Phone</div><input id="phone" class="input"/></div>
-        <div><div class="label">Email</div><input id="email" class="input"/></div>
+        <div>
+          <div class="label">Mobile Phone</div>
+          <input id="phone" class="input" autocomplete="tel" />
+        </div>
+        <div>
+          <div class="label">Email</div>
+          <input id="email" class="input" autocomplete="email" />
+        </div>
       </div>
     </section>
 
-    <!-- SERVICE ADDRESS -->
-    <section class="card">
-      <div class="card-header"><h2 class="card-title">Service Address</h2></div>
+    <!-- SERVICE ADDRESS + TECH NOTES -->
+    <section class="card" id="addr-section">
+      <div class="card-header">
+        <h2 class="card-title">Service Address</h2>
+      </div>
       <div class="grid grid-2">
-        <div><div class="label">Street</div><input id="svcStreet" class="input"/></div>
-        <div><div class="label">City</div><input id="svcCity" class="input"/></div>
+        <div>
+          <div class="label">Street</div>
+          <input id="svcStreet" class="input" autocomplete="address-line1" />
+        </div>
+        <div>
+          <div class="label">City</div>
+          <input id="svcCity" class="input" autocomplete="address-level2" />
+        </div>
       </div>
       <div class="grid grid-3 mt-3">
-        <div><div class="label">State</div><input id="svcState" class="input" value="IN"/></div>
-        <div><div class="label">ZIP</div><input id="svcZip" class="input"/></div>
+        <div>
+          <div class="label">State</div>
+          <input id="svcState" class="input" value="IN" maxlength="2" />
+        </div>
+        <div>
+          <div class="label">ZIP</div>
+          <input id="svcZip" class="input" autocomplete="postal-code" />
+        </div>
       </div>
       <div class="mt-3">
-        <div class="label">Technician Notes</div>
-        <textarea id="svcNotes" class="input" rows="3" placeholder="Gate code, parking, pets, special instructions…"></textarea>
+        <div class="label">Technician Notes (parking, gates, pets, etc.)</div>
+        <textarea id="svcNotes" rows="3" class="input" placeholder="Gate code, where to park, pets in yard, special instructions..."></textarea>
       </div>
     </section>
 
-    <!-- VIN LOOKUP -->
-    <section class="card">
+    <!-- VIN -->
+    <section class="card" id="vin-section">
       <div class="card-header">
         <h2 class="card-title">VIN Lookup</h2>
-        <button class="btn btn-outline" id="vin-demo-btn">Demo VIN</button>
+        <button class="btn btn-outline" id="vin-demo-btn" type="button">Demo VIN</button>
       </div>
       <div class="grid grid-3">
-        <div><div class="label">VIN</div><input id="vin" class="input"/></div>
-        <div class="flex" style="align-items:flex-end;"><button class="btn" id="vin-lookup-btn">Lookup VIN</button></div>
+        <div>
+          <div class="label">VIN</div>
+          <input id="vin" class="input" maxlength="20" autocomplete="off" />
+        </div>
+        <div class="flex" style="align-items:flex-end;justify-content:flex-start">
+          <button id="vin-lookup-btn" class="btn" type="button">Lookup VIN</button>
+        </div>
       </div>
       <div class="grid grid-3 mt-3">
-        <div><div class="label">Year</div><input id="year" class="input" readonly/></div>
-        <div><div class="label">Make</div><input id="make" class="input" readonly/></div>
-        <div><div class="label">Model</div><input id="model" class="input" readonly/></div>
+        <div>
+          <div class="label">Year</div>
+          <input id="year" class="input" readonly />
+        </div>
+        <div>
+          <div class="label">Make</div>
+          <input id="make" class="input" readonly />
+        </div>
+        <div>
+          <div class="label">Model</div>
+          <input id="model" class="input" readonly />
+        </div>
       </div>
       <div class="grid grid-3 mt-3">
-        <div><div class="label">Engine</div><input id="engine" class="input" readonly/></div>
-        <div><div class="label">Oil Capacity (qts)</div><input id="oilCapacity" class="input" readonly/></div>
+        <div>
+          <div class="label">Engine</div>
+          <input id="engine" class="input" readonly />
+        </div>
+        <div>
+          <div class="label">Oil Capacity (qts)</div>
+          <input id="oilCapacity" class="input" readonly />
+        </div>
         <div>
           <div class="label">Oil Grade</div>
           <select id="oilGrade" class="input">
-            <option value="">Select…</option>
-            <option>0W-20</option><option>5W-20</option>
-            <option>5W-30</option><option>0W-30</option>
-            <option>10W-30</option><option>15W-40</option>
+            <option value="">Select...</option>
+            <option>0W-20</option>
+            <option>5W-20</option>
+            <option>5W-30</option>
+            <option>0W-30</option>
+            <option>10W-30</option>
+            <option>15W-40</option>
           </select>
         </div>
       </div>
@@ -255,31 +306,51 @@
       <div id="vin-msg" class="msg msg-error" style="display:none"></div>
     </section>
 
-    <!-- PHOTOS -->
-    <section class="card">
-      <div class="card-header"><h2 class="card-title">Vehicle Photos (Required)</h2></div>
-      <div class="grid grid-4">
-        <div><div class="label">Front</div><input id="photoFront" type="file" class="input" accept="image/*"/></div>
-        <div><div class="label">Driver Side</div><input id="photoDriver" type="file" class="input" accept="image/*"/></div>
-        <div><div class="label">Passenger Side</div><input id="photoPassenger" type="file" class="input" accept="image/*"/></div>
-        <div><div class="label">Rear</div><input id="photoRear" type="file" class="input" accept="image/*"/></div>
+    <!-- VEHICLE PHOTOS (REQUIRED) -->
+    <section class="card" id="photos-section">
+      <div class="card-header">
+        <h2 class="card-title">Vehicle Photos</h2>
       </div>
-      <div class="msg msg-error">All four photos are required before booking.</div>
+      <div class="grid grid-4">
+        <div>
+          <div class="label">Front</div>
+          <input id="photoFront" type="file" class="input" accept="image/*" />
+        </div>
+        <div>
+          <div class="label">Driver Side</div>
+          <input id="photoDriver" type="file" class="input" accept="image/*" />
+        </div>
+        <div>
+          <div class="label">Passenger Side</div>
+          <input id="photoPassenger" type="file" class="input" accept="image/*" />
+        </div>
+        <div>
+          <div class="label">Rear</div>
+          <input id="photoRear" type="file" class="input" accept="image/*" />
+        </div>
+      </div>
+      <div class="msg msg-error">
+        Vehicle photos are <strong>required</strong> for booking. Please upload clear photos of the
+        front, driver side, passenger side, and rear before confirming your appointment.
+      </div>
     </section>
 
     <!-- SERVICES -->
-    <section class="card">
-      <div class="card-header"><h2 class="card-title">Services</h2></div>
+    <section class="card" id="services-section">
+      <div class="card-header">
+        <h2 class="card-title">Services</h2>
+        <span class="badge">Mobile only</span>
+      </div>
       <div class="grid grid-2">
         <div>
           <div class="label">Primary Service</div>
           <select id="primaryService" class="input">
-            <option value="">Select…</option>
+            <option value="">Select a service...</option>
             <option value="oil-basic">Oil Change (includes 5 qts)</option>
             <option value="oil-syn">Full Synthetic Oil Change</option>
-            <option value="brakes-front">Front Brakes</option>
-            <option value="brakes-rear">Rear Brakes</option>
-            <option value="brakes-all">Front & Rear Brakes</option>
+            <option value="brakes-front">Front Brake Pads &amp; Labor</option>
+            <option value="brakes-rear">Rear Brake Pads &amp; Labor</option>
+            <option value="brakes-all">Front &amp; Rear Brake Pads</option>
           </select>
         </div>
         <div>
@@ -292,65 +363,93 @@
         </div>
       </div>
 
-      <div class="label mt-3">Brake Parts (Optional)</div>
+      <div class="label mt-3">Brake Parts (optional)</div>
       <div class="grid grid-4">
         <label class="pill-check" data-addon="rotors-front">
-          <input type="checkbox"/><div>
-            <div class="pill-label-main">Rotors (Front)</div>
-            <div class="pill-label-sub">Parts & Install</div>
+          <input type="checkbox" />
+          <div>
+            <div class="pill-label-main">Rotors (Front pair)</div>
+            <div class="pill-label-sub">Parts &amp; install</div>
           </div>
         </label>
         <label class="pill-check" data-addon="rotors-rear">
-          <input type="checkbox"/><div>
-            <div class="pill-label-main">Rotors (Rear)</div>
-            <div class="pill-label-sub">Parts & Install</div>
+          <input type="checkbox" />
+          <div>
+            <div class="pill-label-main">Rotors (Rear pair)</div>
+            <div class="pill-label-sub">Parts &amp; install</div>
           </div>
         </label>
         <label class="pill-check" data-addon="calipers-front">
-          <input type="checkbox"/><div>
-            <div class="pill-label-main">Calipers (Front)</div>
+          <input type="checkbox" />
+          <div>
+            <div class="pill-label-main">Calipers (Front pair)</div>
             <div class="pill-label-sub">As needed</div>
           </div>
         </label>
         <label class="pill-check" data-addon="calipers-rear">
-          <input type="checkbox"/><div>
-            <div class="pill-label-main">Calipers (Rear)</div>
+          <input type="checkbox" />
+          <div>
+            <div class="pill-label-main">Calipers (Rear pair)</div>
             <div class="pill-label-sub">As needed</div>
           </div>
         </label>
       </div>
+
+      <div class="section-footnote">
+        Prices are estimates and assume normal conditions. If your vehicle requires unusual parts or extra labor we’ll confirm any change before work.
+      </div>
     </section>
 
-    <!-- TIME -->
-    <section class="card">
-      <div class="card-header"><h2 class="card-title">Preferred Date & Time</h2></div>
+    <!-- DATE & TIME -->
+    <section class="card" id="time-section">
+      <div class="card-header">
+        <h2 class="card-title">Preferred Date &amp; Time</h2>
+      </div>
       <div class="grid grid-3">
-        <div><div class="label">Date</div><input id="prefDate" class="input" type="date"/></div>
-        <div><div class="label">Time</div><select id="prefTime" class="input"><option value="">Select a time…</option></select></div>
-        <div class="flex" style="align-items:flex-end;"><button id="checkTimesBtn" class="btn btn-outline">Check Availability</button></div>
+        <div>
+          <div class="label">Date</div>
+          <input id="prefDate" type="date" class="input" />
+        </div>
+        <div>
+          <div class="label">Time</div>
+          <select id="prefTime" class="input">
+            <option value="">Select a time...</option>
+          </select>
+        </div>
+        <div class="flex" style="align-items:flex-end">
+          <button id="checkTimesBtn" class="btn btn-outline" type="button">Check Availability</button>
+        </div>
       </div>
       <div id="time-msg" class="msg"></div>
     </section>
 
-    <!-- CART -->
-    <section class="card">
-      <div class="card-header"><h2 class="card-title">Your Cart</h2></div>
-      <div id="cart-lines" style="min-height:40px"></div>
-      <div>
-        <div class="cart-row muted"><span>Indiana Sales Tax (7%)</span><span id="cart-tax">$0.00</span></div>
-        <div class="cart-row total"><span>Total</span><span id="cart-total">$0.00</span></div>
+    <!-- CART / PAY -->
+    <section class="card" id="cart-section">
+      <div class="card-header">
+        <h2 class="card-title">Your Cart</h2>
+      </div>
+      <div id="cart-lines" style="min-height:40px;font-size:14px;color:var(--muted)">
+        No items yet.
+      </div>
+      <div class="mt-3">
+        <div class="cart-row muted">
+          <span>Indiana Sales Tax (7%)</span>
+          <span id="cart-tax">$0.00</span>
+        </div>
+        <div class="cart-row total">
+          <span>Total</span>
+          <span id="cart-total">$0.00</span>
+        </div>
       </div>
       <div class="mt-4 flex">
-        <button id="payBtn" class="btn" disabled>Confirm & Pay</button>
-        <span class="msg">Card-only payment. Your card is charged after appointment confirmation.</span>
+        <button id="payBtn" class="btn" type="button" disabled>Confirm &amp; Pay</button>
+        <span class="msg">Card-only payment. Your card is charged after we confirm your appointment.</span>
       </div>
       <div id="pay-msg" class="msg msg-error" style="display:none"></div>
     </section>
   </div>
 
-  <!-- =============== JAVASCRIPT =============== -->
   <script>
-    // === CONFIG – your live Web App URL ===
     const CALENDAR_ENDPOINT =
       "https://script.google.com/macros/s/AKfycbzo6QgEqlVlEy6Ht8mRIDHxL2p5TeSkbbfif_VEmRgka80E2_gRokVUNrNMbHZJ9WZW/exec";
 
@@ -371,64 +470,64 @@
         "syn-blend": 9.99,
         "full-syn": 12.99,
       },
+      // only brake parts here now
       addons: {
         "rotors-front": 249.99,
         "rotors-rear": 249.99,
         "calipers-front": 259.99,
-        "calipers-rear": 259.99,
-      },
+        "calipers-rear": 259.99
+      }
     };
 
-    // DOM refs
-    const firstNameInput = document.getElementById("firstName");
-    const lastNameInput  = document.getElementById("lastName");
-    const phoneInput     = document.getElementById("phone");
-    const emailInput     = document.getElementById("email");
+    const firstNameInput = document.getElementById('firstName');
+    const lastNameInput  = document.getElementById('lastName');
+    const phoneInput     = document.getElementById('phone');
+    const emailInput     = document.getElementById('email');
 
-    const svcStreetInput = document.getElementById("svcStreet");
-    const svcCityInput   = document.getElementById("svcCity");
-    const svcStateInput  = document.getElementById("svcState");
-    const svcZipInput    = document.getElementById("svcZip");
-    const svcNotesInput  = document.getElementById("svcNotes");
+    const svcStreetInput = document.getElementById('svcStreet');
+    const svcCityInput   = document.getElementById('svcCity');
+    const svcStateInput  = document.getElementById('svcState');
+    const svcZipInput    = document.getElementById('svcZip');
+    const svcNotesInput  = document.getElementById('svcNotes');
 
-    const vinInput         = document.getElementById("vin");
-    const vinBtn           = document.getElementById("vin-lookup-btn");
-    const vinDemoBtn       = document.getElementById("vin-demo-btn");
-    const vinMsg           = document.getElementById("vin-msg");
-    const yearInput        = document.getElementById("year");
-    const makeInput        = document.getElementById("make");
-    const modelInput       = document.getElementById("model");
-    const engineInput      = document.getElementById("engine");
-    const oilCapacityInput = document.getElementById("oilCapacity");
-    const oilGradeSelect   = document.getElementById("oilGrade");
+    const vinInput         = document.getElementById('vin');
+    const vinBtn           = document.getElementById('vin-lookup-btn');
+    const vinDemoBtn       = document.getElementById('vin-demo-btn');
+    const vinMsg           = document.getElementById('vin-msg');
+    const yearInput        = document.getElementById('year');
+    const makeInput        = document.getElementById('make');
+    const modelInput       = document.getElementById('model');
+    const engineInput      = document.getElementById('engine');
+    const oilCapacityInput = document.getElementById('oilCapacity');
+    const oilGradeSelect   = document.getElementById('oilGrade');
 
-    const photoFrontInput     = document.getElementById("photoFront");
-    const photoDriverInput    = document.getElementById("photoDriver");
-    const photoPassengerInput = document.getElementById("photoPassenger");
-    const photoRearInput      = document.getElementById("photoRear");
+    const photoFrontInput     = document.getElementById('photoFront');
+    const photoDriverInput    = document.getElementById('photoDriver');
+    const photoPassengerInput = document.getElementById('photoPassenger');
+    const photoRearInput      = document.getElementById('photoRear');
 
-    const primaryServiceSelect = document.getElementById("primaryService");
-    const oilTypeSelect        = document.getElementById("oilType");
+    const primaryServiceSelect = document.getElementById('primaryService');
+    const oilTypeSelect        = document.getElementById('oilType');
 
-    const prefDateInput  = document.getElementById("prefDate");
-    const prefTimeSelect = document.getElementById("prefTime");
-    const checkTimesBtn  = document.getElementById("checkTimesBtn");
-    const timeMsg        = document.getElementById("time-msg");
+    const prefDateInput  = document.getElementById('prefDate');
+    const prefTimeSelect = document.getElementById('prefTime');
+    const checkTimesBtn  = document.getElementById('checkTimesBtn');
+    const timeMsg        = document.getElementById('time-msg');
 
-    const cartLines   = document.getElementById("cart-lines");
-    const cartTaxEl   = document.getElementById("cart-tax");
-    const cartTotalEl = document.getElementById("cart-total");
-    const payBtn      = document.getElementById("payBtn");
-    const payMsg      = document.getElementById("pay-msg");
+    const cartLines   = document.getElementById('cart-lines');
+    const cartTaxEl   = document.getElementById('cart-tax');
+    const cartTotalEl = document.getElementById('cart-total');
+    const payBtn      = document.getElementById('payBtn');
+    const payMsg      = document.getElementById('pay-msg');
 
-    const addonPills = Array.from(document.querySelectorAll("[data-addon]"));
+    const addonPills = Array.from(document.querySelectorAll('[data-addon]'));
 
     function fmt(n){ return "$" + n.toFixed(2); }
 
     function getOilCapacity(){
       const v = parseFloat(oilCapacityInput.value);
       if (!isNaN(v) && v > 0) return v;
-      return 5; // default
+      return 5;
     }
 
     let latestQuote = {
@@ -440,13 +539,11 @@
       total:0
     };
 
-    // === PRICING / CART ===
     function recalcPricing(){
       const primaryKey = primaryServiceSelect.value;
-
       if(!primaryKey){
         cartLines.textContent = "No items yet.";
-        cartTaxEl.textContent   = fmt(0);
+        cartTaxEl.textContent = fmt(0);
         cartTotalEl.textContent = fmt(0);
         payBtn.disabled = true;
         return;
@@ -460,10 +557,7 @@
 
       const basePrice = PRICING.primary[primaryKey] || 0;
       if(basePrice > 0){
-        items.push({
-          label: primaryServiceSelect.options[primaryServiceSelect.selectedIndex].text,
-          amount: basePrice
-        });
+        items.push({label: primaryServiceSelect.options[primaryServiceSelect.selectedIndex].text, amount: basePrice});
         subtotal += basePrice;
       }
 
@@ -472,20 +566,20 @@
         if(extra > 0){
           const perQt = PRICING.extraQt[oilTypeKey] || PRICING.extraQt.conv;
           const extraPrice = extra * perQt;
-          items.push({label:`Extra oil (${extra.toFixed(1)} qts)`, amount:extraPrice});
+          items.push({label:`Extra oil (${extra.toFixed(1)} qts)`, amount: extraPrice});
           subtotal += extraPrice;
         }
       }
 
       addonPills.forEach(p=>{
-        const key = p.getAttribute("data-addon");
+        const key = p.getAttribute('data-addon');
         const cb  = p.querySelector('input[type="checkbox"]');
         const checked = cb.checked;
-        p.classList.toggle("active", checked);
+        p.classList.toggle('active', checked);
         if(!checked) return;
         const price = PRICING.addons[key] || 0;
         if(price > 0){
-          const labelMain = p.querySelector(".pill-label-main").textContent.trim();
+          const labelMain = p.querySelector('.pill-label-main').textContent.trim();
           items.push({label:labelMain, amount:price});
           subtotal += price;
         }
@@ -496,7 +590,15 @@
       const tax      = taxBase * TAX;
       const total    = taxBase + tax;
 
-      latestQuote = {items, subtotal, overhead, tax, fee:CONVENIENCE_FEE, total};
+      latestQuote = {
+        items,
+        subtotal,
+        overhead,
+        tax,
+        fee:CONVENIENCE_FEE,
+        total
+      };
+
       renderCart();
     }
 
@@ -511,7 +613,7 @@
 
       cartLines.innerHTML = "";
       latestQuote.items.forEach(it=>{
-        const row = document.createElement("div");
+        const row = document.createElement('div');
         row.className = "cart-row";
         row.innerHTML = `<span>${it.label}</span><span>${fmt(it.amount)}</span>`;
         cartLines.appendChild(row);
@@ -522,7 +624,6 @@
       payBtn.disabled = false;
     }
 
-    // === VIN LOOKUP ===
     async function handleVinLookup(){
       const vin = vinInput.value.trim();
       vinMsg.style.display = "none";
@@ -535,7 +636,7 @@
       }
 
       vinBtn.disabled = true;
-      vinBtn.textContent = "Looking up…";
+      vinBtn.textContent = "Looking up...";
 
       try{
         const url = `${CALENDAR_ENDPOINT}?path=vin&vin=${encodeURIComponent(vin)}`;
@@ -563,130 +664,145 @@
       }
     }
 
-    vinDemoBtn.addEventListener("click", ()=>{ vinInput.value = "1GT49VEY4RF249205"; });
-    vinBtn.addEventListener("click", handleVinLookup);
-    vinInput.addEventListener("keydown", e=>{
+    vinDemoBtn.addEventListener('click', ()=>{ vinInput.value = "1GT49VEY4RF249205"; });
+    vinBtn.addEventListener('click', handleVinLookup);
+    vinInput.addEventListener('keydown', e=>{
       if(e.key === "Enter"){
         e.preventDefault();
         handleVinLookup();
       }
     });
 
-    // === TIME / ACUITY ===
     async function handleCheckTimes(){
       timeMsg.textContent = "";
       const date = prefDateInput.value;
       const primaryKey = primaryServiceSelect.value;
 
-      if(!date){
-        timeMsg.textContent = "Choose a date first.";
-        return;
-      }
-      if(!primaryKey){
-        timeMsg.textContent = "Choose a primary service first.";
-        return;
-      }
+async function handleCheckTimes() {
+  timeMsg.textContent = "";
+  const date = prefDateInput.value;
+  const primaryKey = primaryServiceSelect.value;
 
-      let appointmentTypeID = "";
-      switch(primaryKey){
-        case "oil-basic":
-        case "oil-syn":
-          appointmentTypeID = "85364590"; // Oil Change
-          break;
-        case "brakes-front":
-          appointmentTypeID = "85364671"; // Front Brake Only
-          break;
-        case "brakes-rear":
-          appointmentTypeID = "85364740"; // Rear Brakes Only
-          break;
-        case "brakes-all":
-          appointmentTypeID = "85364836"; // Front & Rear Brakes
-          break;
-        default:
-          appointmentTypeID = "85364590";
-      }
+  if (!date) {
+    timeMsg.textContent = "Choose a date first.";
+    return;
+  }
+  if (!primaryKey) {
+    timeMsg.textContent = "Choose a primary service first.";
+    return;
+  }
 
-      checkTimesBtn.disabled = true;
-      checkTimesBtn.textContent = "Checking…";
+  // Map primary service → Acuity appointmentTypeID
+  let appointmentTypeID = "";
+  switch (primaryKey) {
+    case "oil-basic":
+    case "oil-syn":
+      appointmentTypeID = "85364590"; // Oil Change
+      break;
+    case "brakes-front":
+      appointmentTypeID = "85364671"; // Front Brake Only
+      break;
+    case "brakes-rear":
+      appointmentTypeID = "85364740"; // Rear Brakes Only
+      break;
+    case "brakes-all":
+      appointmentTypeID = "85364836"; // Front & Rear Brakes
+      break;
+    default:
+      appointmentTypeID = "85364590"; // fallback = Oil Change
+  }
 
-      try{
-        const url = `${CALENDAR_ENDPOINT}?path=times&date=${encodeURIComponent(date)}&appointmentTypeID=${encodeURIComponent(appointmentTypeID)}`;
-        const res = await fetch(url);
-        const data = await res.json();
+  checkTimesBtn.disabled = true;
+  checkTimesBtn.textContent = "Checking...";
 
-        if(!data.ok){
-          throw new Error(data.error || "Could not load times");
-        }
+  try {
+    const url = `${CALENDAR_ENDPOINT}?path=times&date=${encodeURIComponent(
+      date
+    )}&appointmentTypeID=${encodeURIComponent(appointmentTypeID)}`;
+    const res = await fetch(url);
+    const data = await res.json();
 
-        const rawTimes = data.times || [];
-        const OPEN_MIN  = 9 * 60;          // 9:00
-        const CLOSE_MIN = 19 * 60 + 30;    // 7:30 PM
-
-        function parseToMinutes(str){
-          if(str.includes("T")){ // ISO
-            const m = str.match(/T(\d{2}):(\d{2})/);
-            if(!m) return null;
-            return parseInt(m[1],10)*60 + parseInt(m[2],10);
-          }
-          const m = str.match(/(\d{1,2}):(\d{2})\s*(am|pm)/i);
-          if(!m) return null;
-          let h = parseInt(m[1],10);
-          const min = parseInt(m[2],10);
-          const ampm = m[3].toLowerCase();
-          if(ampm === "pm" && h < 12) h += 12;
-          if(ampm === "am" && h === 12) h = 0;
-          return h*60 + min;
-        }
-
-        function minutesToLabel(totalMin){
-          let h24 = Math.floor(totalMin/60);
-          const min = totalMin%60;
-          const ampm = h24>=12 ? "PM" : "AM";
-          let h12 = h24%12;
-          if(h12===0) h12=12;
-          return `${h12}:${String(min).padStart(2,"0")} ${ampm}`;
-        }
-
-        const formatted = rawTimes
-          .map(raw=>{
-            const mins = parseToMinutes(raw);
-            if(mins==null) return null;
-            if(mins < OPEN_MIN || mins > CLOSE_MIN) return null;
-            return {raw, mins, label:minutesToLabel(mins)};
-          })
-          .filter(Boolean)
-          .sort((a,b)=>a.mins-b.mins);
-
-        prefTimeSelect.innerHTML = `<option value="">Select a time…</option>`;
-        formatted.forEach(t=>{
-          const opt = document.createElement("option");
-          opt.value = t.raw;
-          opt.textContent = t.label;
-          prefTimeSelect.appendChild(opt);
-        });
-
-        timeMsg.textContent = formatted.length
-          ? "Times loaded from our live schedule."
-          : "No open slots for that date. Try another day.";
-      }catch(err){
-        console.error(err);
-        timeMsg.textContent = err.message;
-      }finally{
-        checkTimesBtn.disabled = false;
-        checkTimesBtn.textContent = "Check Availability";
-      }
+    if (!data.ok) {
+      throw new Error(data.error || "Could not load times");
     }
 
-    checkTimesBtn.addEventListener("click", handleCheckTimes);
+    const rawTimes = data.times || [];
 
-    // === PAYMENT (Stripe via Apps Script) ===
+    // Filter + format times: only 9:00 AM – 7:30 PM, show in 12-hour format
+    const OPEN_MIN = 9 * 60;          // 9:00
+    const CLOSE_MIN = 19 * 60 + 30;   // 7:30 PM
+
+    function parseToMinutes(str) {
+      // ISO style: 2025-12-09T12:00:00-0500
+      if (str.includes("T")) {
+        const m = str.match(/T(\d{2}):(\d{2})/);
+        if (!m) return null;
+        const h = parseInt(m[1], 10);
+        const min = parseInt(m[2], 10);
+        return h * 60 + min;
+      }
+      // Fallback: "12:00 PM"
+      const m = str.match(/(\d{1,2}):(\d{2})\s*(am|pm)/i);
+      if (!m) return null;
+      let h = parseInt(m[1], 10);
+      const min = parseInt(m[2], 10);
+      const ampm = m[3].toLowerCase();
+      if (ampm === "pm" && h < 12) h += 12;
+      if (ampm === "am" && h === 12) h = 0;
+      return h * 60 + min;
+    }
+
+    function minutesToLabel(totalMin) {
+      let h24 = Math.floor(totalMin / 60);
+      const min = totalMin % 60;
+      const ampm = h24 >= 12 ? "PM" : "AM";
+      let h12 = h24 % 12;
+      if (h12 === 0) h12 = 12;
+      return `${h12}:${String(min).padStart(2, "0")} ${ampm}`;
+    }
+
+    const formatted = rawTimes
+      .map((raw) => {
+        const mins = parseToMinutes(raw);
+        if (mins == null) return null;
+        if (mins < OPEN_MIN || mins > CLOSE_MIN) return null;
+        return { raw, mins, label: minutesToLabel(mins) };
+      })
+      .filter(Boolean)
+      .sort((a, b) => a.mins - b.mins);
+
+    prefTimeSelect.innerHTML = `<option value="">Select a time...</option>`;
+
+    formatted.forEach((t) => {
+      const opt = document.createElement("option");
+      opt.value = t.raw;      // send exact value back to server
+      opt.textContent = t.label; // nice 12-hour label
+      prefTimeSelect.appendChild(opt);
+    });
+
+    if (!formatted.length) {
+      timeMsg.textContent = "No open slots for that date. Try another day.";
+    } else {
+      timeMsg.textContent = "Times loaded from our live schedule.";
+    }
+  } catch (err) {
+    console.error(err);
+    timeMsg.textContent = err.message;
+  } finally {
+    checkTimesBtn.disabled = false;
+    checkTimesBtn.textContent = "Check Availability";
+  }
+}
+
+    checkTimesBtn.addEventListener('click', handleCheckTimes);
+
     function fileToBase64(input){
       return new Promise(resolve=>{
         const file = input.files && input.files[0];
         if(!file) return resolve(null);
         const reader = new FileReader();
-        reader.onload = ()=>resolve(reader.result);
-        reader.onerror = ()=>resolve(null);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => resolve(null);
         reader.readAsDataURL(file);
       });
     }
@@ -710,25 +826,26 @@
         payMsg.style.display = "block";
         return;
       }
+
       if(
         !photoFrontInput.files[0] ||
         !photoDriverInput.files[0] ||
         !photoPassengerInput.files[0] ||
         !photoRearInput.files[0]
       ){
-        payMsg.textContent = "Upload all 4 vehicle photos before confirming.";
+        payMsg.textContent = "Vehicle photos are required. Please upload front, driver side, passenger side, and rear photos before confirming.";
         payMsg.style.display = "block";
         return;
       }
 
       payBtn.disabled = true;
-      payBtn.textContent = "Creating payment…";
+      payBtn.textContent = "Creating payment...";
 
       const metaPhotos = {
-        front:     await fileToBase64(photoFrontInput),
-        driver:    await fileToBase64(photoDriverInput),
+        front: await fileToBase64(photoFrontInput),
+        driver: await fileToBase64(photoDriverInput),
         passenger: await fileToBase64(photoPassengerInput),
-        rear:      await fileToBase64(photoRearInput),
+        rear: await fileToBase64(photoRearInput)
       };
 
       const payload = {
@@ -757,8 +874,8 @@
           primaryService: primaryServiceSelect.value,
           oilType: oilTypeSelect.value,
           addons: addonPills
-            .filter(p=>p.querySelector("input").checked)
-            .map(p=>p.getAttribute("data-addon")),
+            .filter(p=>p.querySelector('input').checked)
+            .map(p=>p.getAttribute('data-addon')),
           date: prefDateInput.value,
           time: prefTimeSelect.value,
           quote: latestQuote,
@@ -768,14 +885,15 @@
 
       try{
         const res = await fetch(CALENDAR_ENDPOINT, {
-          method:"POST",
-          headers:{"Content-Type":"application/json"},
-          body:JSON.stringify(payload)
+          method: "POST",
+          headers: {"Content-Type":"application/json"},
+          body: JSON.stringify(payload)
         });
         const data = await res.json();
         if(!data.ok){
           throw new Error(data.error || "Payment session failed");
         }
+
         alert("Order received! We will confirm your appointment shortly.");
       }catch(err){
         console.error(err);
@@ -787,14 +905,13 @@
       }
     }
 
-    payBtn.addEventListener("click", handlePay);
+    payBtn.addEventListener('click', handlePay);
 
-    // wire pricing events
-    primaryServiceSelect.addEventListener("change", recalcPricing);
-    oilTypeSelect.addEventListener("change", recalcPricing);
+    primaryServiceSelect.addEventListener('change', recalcPricing);
+    oilTypeSelect.addEventListener('change', recalcPricing);
     addonPills.forEach(p=>{
       const cb = p.querySelector('input[type="checkbox"]');
-      cb.addEventListener("change", recalcPricing);
+      cb.addEventListener('change', recalcPricing);
     });
 
     recalcPricing();
