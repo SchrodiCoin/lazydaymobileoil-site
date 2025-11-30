@@ -678,75 +678,121 @@
       const date = prefDateInput.value;
       const primaryKey = primaryServiceSelect.value;
 
-      if(!date){
-        timeMsg.textContent = "Choose a date first.";
-        return;
-      }
-      if(!primaryKey){
-        timeMsg.textContent = "Choose a primary service first.";
-        return;
-      }
+async function handleCheckTimes() {
+  timeMsg.textContent = "";
+  const date = prefDateInput.value;
+  const primaryKey = primaryServiceSelect.value;
 
-     let appointmentTypeID = "";
-switch (primaryKey) {
-  case "oil-basic":
-  case "oil-syn":
-    // Oil Change appointment in Acuity
-    appointmentTypeID = "85364590";
-    break;
+  if (!date) {
+    timeMsg.textContent = "Choose a date first.";
+    return;
+  }
+  if (!primaryKey) {
+    timeMsg.textContent = "Choose a primary service first.";
+    return;
+  }
 
-  case "brakes-front":
-    // Front Brake Only
-    appointmentTypeID = "85364671";
-    break;
+  // Map primary service → Acuity appointmentTypeID
+  let appointmentTypeID = "";
+  switch (primaryKey) {
+    case "oil-basic":
+    case "oil-syn":
+      appointmentTypeID = "85364590"; // Oil Change
+      break;
+    case "brakes-front":
+      appointmentTypeID = "85364671"; // Front Brake Only
+      break;
+    case "brakes-rear":
+      appointmentTypeID = "85364740"; // Rear Brakes Only
+      break;
+    case "brakes-all":
+      appointmentTypeID = "85364836"; // Front & Rear Brakes
+      break;
+    default:
+      appointmentTypeID = "85364590"; // fallback = Oil Change
+  }
 
-  case "brakes-rear":
-    // Rear Brakes Only
-    appointmentTypeID = "85364740";
-    break;
+  checkTimesBtn.disabled = true;
+  checkTimesBtn.textContent = "Checking...";
 
-  case "brakes-all":
-    // Front & Rear Brakes
-    appointmentTypeID = "85364836";
-    break;
+  try {
+    const url = `${CALENDAR_ENDPOINT}?path=times&date=${encodeURIComponent(
+      date
+    )}&appointmentTypeID=${encodeURIComponent(appointmentTypeID)}`;
+    const res = await fetch(url);
+    const data = await res.json();
 
-  default:
-    // Fallback to Oil Change if something unexpected happens
-    appointmentTypeID = "85364590";
-}
-
-      checkTimesBtn.disabled = true;
-      checkTimesBtn.textContent = "Checking...";
-
-      try{
-        const url = `${CALENDAR_ENDPOINT}?path=times&date=${encodeURIComponent(date)}&appointmentTypeID=${encodeURIComponent(appointmentTypeID)}`;
-        const res = await fetch(url);
-        const data = await res.json();
-
-        if(!data.ok){
-          throw new Error(data.error || "Could not load times");
-        }
-
-        const times = data.times || [];
-        prefTimeSelect.innerHTML = `<option value="">Select a time...</option>`;
-        times.forEach(t=>{
-          const opt = document.createElement('option');
-          opt.value = t;
-          opt.textContent = t;
-          prefTimeSelect.appendChild(opt);
-        });
-
-        timeMsg.textContent = times.length
-          ? "Times loaded from our live schedule."
-          : "No open slots for that date. Try another day.";
-      }catch(err){
-        console.error(err);
-        timeMsg.textContent = err.message;
-      }finally{
-        checkTimesBtn.disabled = false;
-        checkTimesBtn.textContent = "Check Availability";
-      }
+    if (!data.ok) {
+      throw new Error(data.error || "Could not load times");
     }
+
+    const rawTimes = data.times || [];
+
+    // Filter + format times: only 9:00 AM – 7:30 PM, show in 12-hour format
+    const OPEN_MIN = 9 * 60;          // 9:00
+    const CLOSE_MIN = 19 * 60 + 30;   // 7:30 PM
+
+    function parseToMinutes(str) {
+      // ISO style: 2025-12-09T12:00:00-0500
+      if (str.includes("T")) {
+        const m = str.match(/T(\d{2}):(\d{2})/);
+        if (!m) return null;
+        const h = parseInt(m[1], 10);
+        const min = parseInt(m[2], 10);
+        return h * 60 + min;
+      }
+      // Fallback: "12:00 PM"
+      const m = str.match(/(\d{1,2}):(\d{2})\s*(am|pm)/i);
+      if (!m) return null;
+      let h = parseInt(m[1], 10);
+      const min = parseInt(m[2], 10);
+      const ampm = m[3].toLowerCase();
+      if (ampm === "pm" && h < 12) h += 12;
+      if (ampm === "am" && h === 12) h = 0;
+      return h * 60 + min;
+    }
+
+    function minutesToLabel(totalMin) {
+      let h24 = Math.floor(totalMin / 60);
+      const min = totalMin % 60;
+      const ampm = h24 >= 12 ? "PM" : "AM";
+      let h12 = h24 % 12;
+      if (h12 === 0) h12 = 12;
+      return `${h12}:${String(min).padStart(2, "0")} ${ampm}`;
+    }
+
+    const formatted = rawTimes
+      .map((raw) => {
+        const mins = parseToMinutes(raw);
+        if (mins == null) return null;
+        if (mins < OPEN_MIN || mins > CLOSE_MIN) return null;
+        return { raw, mins, label: minutesToLabel(mins) };
+      })
+      .filter(Boolean)
+      .sort((a, b) => a.mins - b.mins);
+
+    prefTimeSelect.innerHTML = `<option value="">Select a time...</option>`;
+
+    formatted.forEach((t) => {
+      const opt = document.createElement("option");
+      opt.value = t.raw;      // send exact value back to server
+      opt.textContent = t.label; // nice 12-hour label
+      prefTimeSelect.appendChild(opt);
+    });
+
+    if (!formatted.length) {
+      timeMsg.textContent = "No open slots for that date. Try another day.";
+    } else {
+      timeMsg.textContent = "Times loaded from our live schedule.";
+    }
+  } catch (err) {
+    console.error(err);
+    timeMsg.textContent = err.message;
+  } finally {
+    checkTimesBtn.disabled = false;
+    checkTimesBtn.textContent = "Check Availability";
+  }
+}
 
     checkTimesBtn.addEventListener('click', handleCheckTimes);
 
@@ -872,4 +918,5 @@ switch (primaryKey) {
   </script>
 </body>
 </html>
+
 
