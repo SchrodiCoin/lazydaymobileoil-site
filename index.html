@@ -74,7 +74,7 @@
       color:var(--muted);
       margin-bottom:4px;
     }
-    .input, select{
+    .input, select, textarea{
       width:100%;
       padding:8px 10px;
       border-radius:10px;
@@ -83,8 +83,10 @@
       outline:0;
       background:#f9fafb;
       transition:border-color .15s, box-shadow .15s, background .15s;
+      font-family:inherit;
+      resize:vertical;
     }
-    .input:focus, select:focus{
+    .input:focus, select:focus, textarea:focus{
       background:#fff;
       border-color:var(--brand);
       box-shadow:0 0 0 1px rgba(15,23,42,.15);
@@ -218,7 +220,7 @@
       </div>
     </section>
 
-    <!-- SERVICE ADDRESS -->
+    <!-- SERVICE ADDRESS + TECH NOTES -->
     <section class="card" id="addr-section">
       <div class="card-header">
         <h2 class="card-title">Service Address</h2>
@@ -242,6 +244,10 @@
           <div class="label">ZIP</div>
           <input id="svcZip" class="input" autocomplete="postal-code" />
         </div>
+      </div>
+      <div class="mt-3">
+        <div class="label">Technician Notes (parking, gates, pets, etc.)</div>
+        <textarea id="svcNotes" rows="3" class="input" placeholder="Gate code, where to park, pets in yard, special instructions..."></textarea>
       </div>
     </section>
 
@@ -300,7 +306,7 @@
       <div id="vin-msg" class="msg msg-error" style="display:none"></div>
     </section>
 
-    <!-- VEHICLE PHOTOS -->
+    <!-- VEHICLE PHOTOS (REQUIRED) -->
     <section class="card" id="photos-section">
       <div class="card-header">
         <h2 class="card-title">Vehicle Photos</h2>
@@ -469,9 +475,9 @@
   </div>
 
   <script>
-    // === CONFIG – REPLACE WITH YOUR WEB APP URL ===
+    // === CONFIG – your live Web App URL ===
     const CALENDAR_ENDPOINT =
-      https://script.google.com/macros/s/AKfycbzo6QgEqlVlEy6Ht8mRIDHxL2p5TeSkbbfif_VEmRgka80E2_gRokVUNrNMbHZJ9WZW/exec; // TODO: update
+      "https://script.google.com/macros/s/AKfycbzo6QgEqlVlEy6Ht8mRIDHxL2p5TeSkbbfif_VEmRgka80E2_gRokVUNrNMbHZJ9WZW/exec";
 
     const TAX = 0.07;
     const OVERHEAD_RATE = 0.065;
@@ -501,7 +507,6 @@
       }
     };
 
-    // DOM
     const firstNameInput = document.getElementById('firstName');
     const lastNameInput  = document.getElementById('lastName');
     const phoneInput     = document.getElementById('phone');
@@ -511,6 +516,7 @@
     const svcCityInput   = document.getElementById('svcCity');
     const svcStateInput  = document.getElementById('svcState');
     const svcZipInput    = document.getElementById('svcZip');
+    const svcNotesInput  = document.getElementById('svcNotes');
 
     const vinInput         = document.getElementById('vin');
     const vinBtn           = document.getElementById('vin-lookup-btn');
@@ -713,7 +719,7 @@
       switch(primaryKey){
         case "oil-basic":
         case "oil-syn":
-          appointmentTypeID = "1"; // replace with real Acuity type IDs
+          appointmentTypeID = "1"; // update with real Acuity IDs
           break;
         case "brakes-front":
         case "brakes-rear":
@@ -790,7 +796,6 @@
         return;
       }
 
-      // NEW: require all four photos
       if(
         !photoFrontInput.files[0] ||
         !photoDriverInput.files[0] ||
@@ -826,6 +831,7 @@
           serviceCity:   svcCityInput.value,
           serviceState:  svcStateInput.value,
           serviceZip:    svcZipInput.value,
+          serviceNotes:  svcNotesInput.value,
 
           vin: vinInput.value.trim(),
           year: yearInput.value,
