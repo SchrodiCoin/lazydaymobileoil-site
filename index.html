@@ -323,7 +323,10 @@
           <input id="photoRear" type="file" class="input" accept="image/*" />
         </div>
       </div>
-      <div class="msg">Photos help us see wheels, rust, and access. Optional but recommended.</div>
+      <div class="msg msg-error">
+        Vehicle photos are <strong>required</strong> for booking. Please upload clear photos of the
+        front, driver side, passenger side, and rear before confirming your appointment.
+      </div>
     </section>
 
     <!-- SERVICES -->
@@ -452,7 +455,6 @@
           <span>Indiana Sales Tax (7%)</span>
           <span id="cart-tax">$0.00</span>
         </div>
-        <!-- No convenience fee line; fee = 0 -->
         <div class="cart-row total">
           <span>Total</span>
           <span id="cart-total">$0.00</span>
@@ -469,11 +471,11 @@
   <script>
     // === CONFIG – REPLACE WITH YOUR WEB APP URL ===
     const CALENDAR_ENDPOINT =
-      "https://script.google.com/macros/s/AKfycbzo6QgEqlVlEy6Ht8mRIDHxL2p5TeSkbbfif_VEmRgka80E2_gRokVUNrNMbHZJ9WZW/exec"; // <<<<<< CHANGE THIS ONLY
+      https://script.google.com/macros/s/AKfycbzo6QgEqlVlEy6Ht8mRIDHxL2p5TeSkbbfif_VEmRgka80E2_gRokVUNrNMbHZJ9WZW/exec; // TODO: update
 
     const TAX = 0.07;
-    const OVERHEAD_RATE = 0.065;       // 6.5% overhead (hidden)
-    const CONVENIENCE_FEE = 0.0;       // no $5 fee now
+    const OVERHEAD_RATE = 0.065;
+    const CONVENIENCE_FEE = 0.0;
 
     const PRICING = {
       primary: {
@@ -542,7 +544,6 @@
 
     const addonPills = Array.from(document.querySelectorAll('[data-addon]'));
 
-    // helpers
     function fmt(n){ return "$" + n.toFixed(2); }
 
     function getOilCapacity(){
@@ -551,7 +552,6 @@
       return 5;
     }
 
-    // PRICING
     let latestQuote = {
       items:[],
       subtotal:0,
@@ -646,7 +646,6 @@
       payBtn.disabled = false;
     }
 
-    // VIN LOOKUP
     async function handleVinLookup(){
       const vin = vinInput.value.trim();
       vinMsg.style.display = "none";
@@ -676,11 +675,7 @@
         engineInput.value      = data.engine || "";
         oilCapacityInput.value = data.oilQts != null ? data.oilQts : "";
 
-        if(!oilGradeSelect.value && data.oilGrade){
-          oilGradeSelect.value = data.oilGrade;
-        }
-
-        recalcPricing(); // auto-update based on new capacity
+        recalcPricing();
       }catch(err){
         console.error(err);
         vinMsg.textContent = err.message;
@@ -691,9 +686,7 @@
       }
     }
 
-    vinDemoBtn.addEventListener('click', ()=>{
-      vinInput.value = "1GT49VEY4RF249205";
-    });
+    vinDemoBtn.addEventListener('click', ()=>{ vinInput.value = "1GT49VEY4RF249205"; });
     vinBtn.addEventListener('click', handleVinLookup);
     vinInput.addEventListener('keydown', e=>{
       if(e.key === "Enter"){
@@ -702,7 +695,6 @@
       }
     });
 
-    // TIME / ACUITY
     async function handleCheckTimes(){
       timeMsg.textContent = "";
       const date = prefDateInput.value;
@@ -721,7 +713,7 @@
       switch(primaryKey){
         case "oil-basic":
         case "oil-syn":
-          appointmentTypeID = "1"; // TODO: replace with your real Acuity type IDs
+          appointmentTypeID = "1"; // replace with real Acuity type IDs
           break;
         case "brakes-front":
         case "brakes-rear":
@@ -753,11 +745,9 @@
           prefTimeSelect.appendChild(opt);
         });
 
-        if(!times.length){
-          timeMsg.textContent = "No open slots for that date. Try another day.";
-        }else{
-          timeMsg.textContent = "Times loaded from our live schedule.";
-        }
+        timeMsg.textContent = times.length
+          ? "Times loaded from our live schedule."
+          : "No open slots for that date. Try another day.";
       }catch(err){
         console.error(err);
         timeMsg.textContent = err.message;
@@ -769,7 +759,6 @@
 
     checkTimesBtn.addEventListener('click', handleCheckTimes);
 
-    // PAYMENT
     function fileToBase64(input){
       return new Promise(resolve=>{
         const file = input.files && input.files[0];
@@ -797,6 +786,18 @@
       }
       if(!firstNameInput.value || !phoneInput.value || !svcStreetInput.value){
         payMsg.textContent = "Please enter contact + service address.";
+        payMsg.style.display = "block";
+        return;
+      }
+
+      // NEW: require all four photos
+      if(
+        !photoFrontInput.files[0] ||
+        !photoDriverInput.files[0] ||
+        !photoPassengerInput.files[0] ||
+        !photoRearInput.files[0]
+      ){
+        payMsg.textContent = "Vehicle photos are required. Please upload front, driver side, passenger side, and rear photos before confirming.";
         payMsg.style.display = "block";
         return;
       }
@@ -869,7 +870,6 @@
 
     payBtn.addEventListener('click', handlePay);
 
-    // Wiring
     primaryServiceSelect.addEventListener('change', recalcPricing);
     oilTypeSelect.addEventListener('change', recalcPricing);
     addonPills.forEach(p=>{
@@ -881,4 +881,3 @@
   </script>
 </body>
 </html>
-
