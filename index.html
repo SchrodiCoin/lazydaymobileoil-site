@@ -78,7 +78,7 @@ input,select,textarea{width:100%;padding:10px;border:1px solid var(--ring);borde
   <section class="card"><h2>VIN Lookup</h2>
     <div class="row two">
       <div><label>VIN</label><input id="vin" maxlength="17" placeholder="1HGCM82633A004352"></div>
-      <div style="align-self:end"><button class="btn" id="vinLookupBtn" type="button">Lookup VIN</button>
+      <div style="align-self:end"><button class="btn" id="vinLookupBtn" type="button">Lookup VIN</button></div>
     </div>
     <div id="decodeStatus" class="note"></div>
     <div class="row three">
@@ -115,7 +115,10 @@ input,select,textarea{width:100%;padding:10px;border:1px solid var(--ring);borde
         <div id="serviceHelp" class="note" style="margin-top:6px"></div>
       </div>
       <div><label>Oil Type</label>
-        <select id="oilType"><option value="conv">Conventional</option><option value="syn">Full Synthetic (+)</option></select>
+        <select id="oilType">
+          <option value="conv">Conventional</option>
+          <option value="syn">Full Synthetic (+)</option>
+        </select>
       </div>
     </div>
 
@@ -143,12 +146,15 @@ input,select,textarea{width:100%;padding:10px;border:1px solid var(--ring);borde
       <div><label>Time</label><select id="prefSlot"><option value="" disabled selected hidden>Select a time…</option></select></div>
     </div>
     <div id="calHelp" class="note" style="margin-top:6px"></div>
-    <button class="btn" id="findTimes" style="margin-top:8px">Check Availability</button>
+    <button class="btn" id="findTimes" style="margin-top:8px" type="button">Check Availability</button>
   </section>
 
   <!-- CART -->
   <section class="card"><h2>Your Cart</h2>
-    <table class="table"><tbody id="lines"><tr><td class="note">No items yet</td><td class="note">$0.00</td></tr></tbody>
+    <table class="table">
+      <tbody id="lines">
+        <tr><td class="note">No items yet</td><td class="note">$0.00</td></tr>
+      </tbody>
       <tbody>
         <tr id="discountRow" style="display:none"><td>Discount (<span id="promoName"></span>)</td><td id="discount">-$0.00</td></tr>
         <tr><td>Indiana Sales Tax (7%)</td><td id="tax">$0.00</td></tr>
@@ -165,6 +171,7 @@ input,select,textarea{width:100%;padding:10px;border:1px solid var(--ring);borde
     </div>
   </section>
 </div>
+
 <script>
 /*** ===============================
  *  CONFIG
@@ -188,7 +195,7 @@ const ACUITY_TYPES = {
   brakes_front: 85384591,
   brakes_rear: 85384592,
   brakes_both: 85384593,
-  oil_brakes: 85384594
+  oil_both: 85384594   // aligned with <option value="oil_both">
 };
 
 // Helper
@@ -219,9 +226,9 @@ function setSubmitNote(msg, isError = false) {
   el.style.color = isError ? "#b91c1c" : "#065f46";
 }
 
-// Optional little note under Date/Time (if you add <small id="availNote">)
+// Note under Date/Time
 function setAvailNote(msg) {
-  const el = byId("availNote");
+  const el = byId("calHelp");        // <-- use existing calHelp element
   if (!el) return;
   el.textContent = msg || "";
 }
@@ -244,18 +251,15 @@ function computeTotals() {
     subtotal += extraQts * PRICING.extraQt;
   }
 
-  // TODO: add-ons & brakes can be added here later, e.g.:
-  // if (byId("rotorsFront")?.checked) subtotal += 199.99;
+  // TODO: add-ons & brakes can be added here later
 
   // Tax only on whatever subtotal we have
   const tax = subtotal * TAX_RATE;
   const total = subtotal + tax;
 
   // Update DOM
-  const subtotalEl = byId("subtotal");
   const taxEl = byId("tax");
   const totalEl = byId("total");
-  if (subtotalEl) subtotalEl.textContent = fmtMoney(subtotal);
   if (taxEl) taxEl.textContent = fmtMoney(tax);
   if (totalEl) totalEl.textContent = fmtMoney(total);
 
@@ -359,7 +363,6 @@ async function handleVinLookup() {
       engineEl.value = descr;
     }
 
-    // NHTSA does *not* give oil capacity; you can still type capacity manually.
     updateCheckoutState();
   } catch (err) {
     console.error("VIN lookup error", err);
@@ -425,11 +428,11 @@ async function loadTimesForDate() {
     console.error("loadTimesForDate error", err);
     slotEl.innerHTML = "";
     const o = document.createElement("option");
-    o.textContent = "Acuity error 403";
+    o.textContent = "Unable to load times";
     o.value = "";
     slotEl.appendChild(o);
     slotEl.disabled = true;
-    setAvailNote("Acuity error – check API keys.");
+    setAvailNote("Problem talking to Acuity – please try again.");
   }
 }
 
@@ -524,6 +527,14 @@ function initLDMO() {
     });
   }
 
+  const findBtn = byId("findTimes");          // wire up "Check Availability" button
+  if (findBtn) {
+    findBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      loadTimesForDate();
+    });
+  }
+
   const cashBtn = byId("cashOut");
   if (cashBtn) {
     cashBtn.addEventListener("click", (e) => {
@@ -532,7 +543,7 @@ function initLDMO() {
     });
   }
 
-  const vinBtn = byId("vinLookupBtn");  // your VIN button must have id="vinLookupBtn"
+  const vinBtn = byId("vinLookupBtn");
   if (vinBtn) {
     vinBtn.addEventListener("click", (e) => {
       e.preventDefault();
@@ -549,11 +560,3 @@ document.addEventListener("DOMContentLoaded", initLDMO);
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
