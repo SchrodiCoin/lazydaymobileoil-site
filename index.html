@@ -1,562 +1,793 @@
-<!-- File: index.html (Frontend) -->
+<!-- index.html – Lazy Day Mobile Oil booking (VIN + pricing + Acuity times + Stripe) -->
 <!doctype html>
 <html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Lazy Day Mobile Oil – Book Now</title>
-<style>
-:root{--ink:#0f172a;--brand:#0E2A47;--ring:#e5e7eb;--bg:#F7F1E6;--accent:#C7382E}
-*{box-sizing:border-box}html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Inter,system-ui,Arial}
-.wrap{max-width:1100px;margin:0 auto;padding:20px}
-.h1{font-size:28px;font-weight:900;color:var(--brand);margin:0 0 8px}
-.card{background:#fff;border:1px solid var(--ring);border-radius:16px;padding:18px;margin:12px 0;box-shadow:0 4px 12px rgba(0,0,0,.04)}
-.row{display:grid;gap:12px}
-@media(min-width:900px){.two{grid-template-columns:1fr 1fr}.three{grid-template-columns:1fr 1fr 1fr}.four{grid-template-columns:repeat(4,1fr)}}
-label{font-size:13px;font-weight:600;display:block;margin-bottom:4px}
-input,select,textarea{width:100%;padding:10px;border:1px solid var(--ring);border-radius:10px}
-.btn{background:var(--accent);color:#fff;border:none;border-radius:10px;padding:10px 14px;font-weight:800;cursor:pointer}
-.btn[disabled]{opacity:.45;cursor:not-allowed}
-.note{font-size:12px;color:#6b7280}
-.preview-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.preview-grid img{width:100%;height:90px;object-fit:cover;border-radius:8px;border:1px solid var(--ring)}
-.table{width:100%;border-collapse:collapse}
-.table td{padding:6px 0;border-bottom:1px dotted #d1d5db}
-.table td:last-child{text-align:right}
-.total-line{font-weight:900}
-.badge{display:inline-block;background:#e2e8f0;color:#111;border-radius:999px;padding:2px 8px;font-size:12px}
-.tile-group{display:grid;gap:12px}
-@media(min-width:900px){.tile-group.four{grid-template-columns:repeat(4,1fr)}.tile-group.two{grid-template-columns:repeat(2,1fr)}}
-.tile{border:2px solid var(--ring);border-radius:14px;padding:12px;display:flex;justify-content:space-between;align-items:center;background:#fff}
-.tile input{transform:scale(1.3);margin-right:10px}
-.tile strong{font-size:15px}
-.tile small{color:#475569}
-.addons-head{font-size:16px;font-weight:800;margin:6px 0}
-.boxed{border:2px solid var(--ring);border-radius:14px;padding:12px}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Lazy Day Mobile Oil – Book Service</title>
+  <style>
+    :root{
+      --ink:#0f172a;
+      --brand:#0E2A47;
+      --accent:#C7382E;
+      --bg:#F7F1E6;
+      --ring:#e5e7eb;
+      --muted:#6b7280;
+      --radius-lg:18px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      background:var(--bg);
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      color:var(--ink);
+    }
+    .wrap{
+      max-width:1100px;
+      margin:0 auto;
+      padding:20px 16px 60px;
+    }
+    .h1{
+      margin:0 0 4px;
+      font-size:30px;
+      font-weight:900;
+      color:var(--brand);
+      letter-spacing:.02em;
+    }
+    .sub{
+      margin:0 0 18px;
+      color:var(--muted);
+      font-size:14px;
+    }
+    .grid{
+      display:grid;
+      gap:12px;
+    }
+    @media(min-width:768px){
+      .grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+      .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+    }
+    .card{
+      background:#fff;
+      border-radius:var(--radius-lg);
+      border:1px solid var(--ring);
+      padding:16px 16px 18px;
+      box-shadow:0 18px 30px rgba(15,23,42,.06);
+      margin-bottom:16px;
+    }
+    .card-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-end;
+      margin-bottom:10px;
+      gap:8px;
+    }
+    .card-title{
+      font-size:18px;
+      font-weight:700;
+      color:var(--brand);
+      margin:0;
+    }
+    .label{
+      font-size:12px;
+      font-weight:600;
+      text-transform:uppercase;
+      letter-spacing:.06em;
+      color:var(--muted);
+      margin-bottom:4px;
+    }
+    .input, select{
+      width:100%;
+      padding:8px 10px;
+      border-radius:10px;
+      border:1px solid var(--ring);
+      font-size:14px;
+      outline:0;
+      background:#f9fafb;
+      transition:border-color .15s, box-shadow .15s, background .15s;
+    }
+    .input:focus, select:focus{
+      background:#fff;
+      border-color:var(--brand);
+      box-shadow:0 0 0 1px var(--brand11);
+    }
+    .btn{
+      border-radius:999px;
+      padding:9px 16px;
+      border:0;
+      font-size:14px;
+      font-weight:600;
+      cursor:pointer;
+      background:var(--brand);
+      color:#fff;
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      box-shadow:0 10px 20px rgba(15,23,42,.18);
+      transition:transform .12s, box-shadow .12s, background .12s;
+      white-space:nowrap;
+    }
+    .btn:hover{
+      transform:translateY(-1px);
+      box-shadow:0 16px 30px rgba(15,23,42,.22);
+      background:#102b4f;
+    }
+    .btn:disabled{
+      opacity:.6;
+      cursor:default;
+      transform:none;
+      box-shadow:none;
+    }
+    .btn-outline{
+      background:#fff;
+      color:var(--brand);
+      border:1px solid var(--ring);
+      box-shadow:none;
+    }
+    .btn-outline:hover{
+      background:#f3f4f6;
+      box-shadow:none;
+      transform:none;
+    }
+    .pill-check{
+      display:flex;
+      align-items:center;
+      gap:6px;
+      border-radius:999px;
+      border:1px solid var(--ring);
+      padding:8px 10px;
+      font-size:13px;
+      cursor:pointer;
+      background:#f9fafb;
+      transition:background .12s, border-color .12s, transform .12s, box-shadow .12s;
+    }
+    .pill-check input{
+      margin:0;
+    }
+    .pill-check.active{
+      background:#eef2ff;
+      border-color:var(--brand);
+      box-shadow:0 0 0 1px rgba(37,99,235,.25);
+      transform:translateY(-1px);
+    }
+    .pill-label-main{
+      font-weight:600;
+      font-size:13px;
+    }
+    .pill-label-sub{
+      font-size:11px;
+      color:var(--muted);
+    }
+    .section-footnote{
+      font-size:12px;
+      color:var(--muted);
+      margin-top:6px;
+    }
+    .cart-row{
+      display:flex;
+      justify-content:space-between;
+      font-size:14px;
+      margin:2px 0;
+    }
+    .cart-row.muted{
+      color:var(--muted);
+      font-size:13px;
+    }
+    .cart-row.total{
+      margin-top:8px;
+      padding-top:8px;
+      border-top:1px dashed var(--ring);
+      font-weight:700;
+    }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      padding:3px 8px;
+      border-radius:999px;
+      background:#f97316;
+      color:#fff;
+      font-size:11px;
+      font-weight:600;
+      text-transform:uppercase;
+      letter-spacing:.06em;
+    }
+    .msg{
+      font-size:12px;
+      margin-top:4px;
+      color:var(--muted);
+    }
+    .msg-error{color:#b91c1c}
+    .flex{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .mt-2{margin-top:8px}
+    .mt-3{margin-top:12px}
+    .mt-4{margin-top:16px}
+  </style>
 </head>
 <body>
+  <div class="wrap">
+    <h1 class="h1">Lazy Day Mobile Oil</h1>
+    <p class="sub">You relax&mdash;we come to you. Use your VIN to auto-fill vehicle details, pick services, then choose a time and pay securely.</p>
 
-<div class="wrap">
-  <div class="h1">Lazy Day Mobile Oil <span class="badge">Hours: 9:30 AM – 7:30 PM</span></div>
-  <p class="note">Serving Greenwood, IN & nearby. VIN lookup auto-fills vehicle specs. Card payment handled via Stripe Checkout.</p>
-
-  <!-- CONTACT -->
-  <section class="card"><h2>Contact</h2>
-    <div class="row two">
-      <div><label>First Name</label><input id="firstName" autocomplete="given-name"></div>
-      <div><label>Last Name</label><input id="lastName" autocomplete="family-name"></div>
-      <div><label>Phone</label><input id="phone" inputmode="tel" placeholder="(###) ###-####"></div>
-      <div><label>Email</label><input id="email" inputmode="email" placeholder="you@email.com"></div>
-    </div>
-  </section>
-
-  <!-- PHOTOS -->
-  <section class="card"><h2>Vehicle Photos</h2>
-    <div class="row four">
-      <div><label>Front</label><input type="file" id="photoFront" accept="image/*"></div>
-      <div><label>Driver Side</label><input type="file" id="photoDriver" accept="image/*"></div>
-      <div><label>Passenger Side</label><input type="file" id="photoPassenger" accept="image/*"></div>
-      <div><label>Rear</label><input type="file" id="photoRear" accept="image/*"></div>
-    </div>
-    <div id="photoPreview" class="preview-grid" style="margin-top:8px"></div>
-  </section>
-
-  <!-- ADDRESS -->
-  <section class="card"><h2>Service Address & Technician Notes</h2>
-    <div class="row two">
-      <div><label>Address</label><input id="addr"></div>
-      <div><label>City</label><input id="city"></div>
-      <div><label>State</label><input id="state" value="IN"></div>
-      <div><label>ZIP</label><input id="zip" inputmode="numeric"></div>
-    </div>
-    <label>Technician Notes</label>
-    <textarea id="techNotes" rows="3" placeholder="Parked in driveway, gate code 1234…"></textarea>
-  </section>
-
-  <!-- VIN -->
-  <section class="card"><h2>VIN Lookup</h2>
-    <div class="row two">
-      <div><label>VIN</label><input id="vin" maxlength="17" placeholder="1HGCM82633A004352"></div>
-      <div style="align-self:end"><button class="btn" id="vinLookupBtn" type="button">Lookup VIN</button></div>
-    </div>
-    <div id="decodeStatus" class="note"></div>
-    <div class="row three">
-      <div><label>Year</label><input id="year" readonly></div>
-      <div><label>Make</label><input id="make" readonly></div>
-      <div><label>Model</label><input id="model" readonly></div>
-    </div>
-    <div class="row three">
-      <div><label>Engine</label><input id="engine" readonly></div>
-      <div><label>Oil Capacity (qts)</label><input id="capacity" type="number" step="0.1" placeholder="5.5"><div class="note" id="capHelp"></div></div>
-      <div><label>Oil Grade</label>
-        <select id="viscosity">
-          <option value="">Select…</option>
-          <option>0W-16</option><option>0W-20</option><option>5W-20</option>
-          <option>5W-30</option><option>0W-30</option><option>10W-30</option><option>5W-40</option>
-        </select>
-        <div class="note" id="viscHelp"></div>
+    <!-- VIN -->
+    <section class="card" id="vin-section">
+      <div class="card-header">
+        <h2 class="card-title">VIN Lookup</h2>
+        <button class="btn btn-outline" id="vin-demo-btn" type="button">Demo VIN</button>
       </div>
-    </div>
-  </section>
-
-  <!-- SERVICES -->
-  <section class="card"><h2>Services</h2>
-    <div class="row two">
-      <div><label>Primary Service</label>
-        <select id="service">
-          <option value="" disabled selected hidden>Select a service…</option>
-          <option value="oil">Oil Change (includes 5 qts)</option>
-          <option value="brakes_front">Front Brake Pads (Bundle)</option>
-          <option value="brakes_rear">Rear Brake Pads (Bundle)</option>
-          <option value="brakes_both">Front & Rear Brake Pads (Bundle)</option>
-          <option value="oil_both">Oil + F&R Brake Pads (Bundle)</option>
-        </select>
-        <div id="serviceHelp" class="note" style="margin-top:6px"></div>
+      <div class="grid grid-3">
+        <div>
+          <div class="label">VIN</div>
+          <input id="vin" class="input" maxlength="20" autocomplete="off" />
+        </div>
+        <div class="flex" style="align-items:flex-end;justify-content:flex-start">
+          <button id="vin-lookup-btn" class="btn" type="button">Lookup VIN</button>
+        </div>
       </div>
-      <div><label>Oil Type</label>
-        <select id="oilType">
-          <option value="conv">Conventional</option>
-          <option value="syn">Full Synthetic (+)</option>
-        </select>
+      <div class="grid grid-3 mt-3">
+        <div>
+          <div class="label">Year</div>
+          <input id="year" class="input" readonly />
+        </div>
+        <div>
+          <div class="label">Make</div>
+          <input id="make" class="input" readonly />
+        </div>
+        <div>
+          <div class="label">Model</div>
+          <input id="model" class="input" readonly />
+        </div>
       </div>
-    </div>
-
-    <div class="boxed" style="margin-top:8px">
-      <div class="addons-head">Brake Parts (optional)</div>
-      <div class="tile-group four">
-        <label class="tile"><span><input type="checkbox" id="rotF"> <strong>Rotors (Front, pair)</strong></span> <small id="hintRotF"></small></label>
-        <label class="tile"><span><input type="checkbox" id="rotR"> <strong>Rotors (Rear, pair)</strong></span> <small id="hintRotR"></small></label>
-        <label class="tile"><span><input type="checkbox" id="calF"> <strong>Calipers (Front, pair)</strong></span> <small id="hintCalF"></small></label>
-        <label class="tile"><span><input type="checkbox" id="calR"> <strong>Calipers (Rear, pair)</strong></span> <small id="hintCalR"></small></label>
-        <label class="tile" style="grid-column:1/-1"><span><input type="checkbox" id="calB"> <strong>Calipers (Front & Rear)</strong></span> <small id="hintCalB"></small></label>
+      <div class="grid grid-3 mt-3">
+        <div>
+          <div class="label">Engine</div>
+          <input id="engine" class="input" readonly />
+        </div>
+        <div>
+          <div class="label">Oil Capacity (qts)</div>
+          <input id="oilCapacity" class="input" readonly />
+        </div>
+        <div>
+          <div class="label">Oil Grade</div>
+          <select id="oilGrade" class="input">
+            <option value="">Select...</option>
+            <option>0W-20</option>
+            <option>5W-20</option>
+            <option>5W-30</option>
+            <option>0W-30</option>
+            <option>10W-30</option>
+            <option>15W-40</option>
+          </select>
+        </div>
       </div>
-    </div>
+      <div class="msg">VIN lookup helps us estimate oil capacity and confirm the right parts. You can still book if VIN fails&mdash;just fill in the basics.</div>
+      <div id="vin-msg" class="msg msg-error" style="display:none"></div>
+    </section>
 
-    <div class="boxed" style="margin-top:12px">
-      <div class="addons-head">Add-ons</div>
-      <div id="addons" class="tile-group two"></div>
-    </div>
-  </section>
+    <!-- Services -->
+    <section class="card" id="services-section">
+      <div class="card-header">
+        <h2 class="card-title">Services</h2>
+        <span class="badge">Mobile only</span>
+      </div>
+      <div class="grid grid-2">
+        <div>
+          <div class="label">Primary Service</div>
+          <select id="primaryService" class="input">
+            <option value="">Select a service...</option>
+            <option value="oil-basic">Oil Change (includes 5 qts)</option>
+            <option value="oil-syn">Full Synthetic Oil Change</option>
+            <option value="brakes-front">Front Brake Pads &amp; Labor</option>
+            <option value="brakes-rear">Rear Brake Pads &amp; Labor</option>
+            <option value="brakes-all">Front &amp; Rear Brake Pads</option>
+          </select>
+        </div>
+        <div>
+          <div class="label">Oil Type</div>
+          <select id="oilType" class="input">
+            <option value="conv">Conventional</option>
+            <option value="syn-blend">Synthetic Blend</option>
+            <option value="full-syn">Full Synthetic</option>
+          </select>
+        </div>
+      </div>
 
-  <!-- DATE/TIME -->
-  <section class="card"><h2>Preferred Date & Time</h2>
-    <div class="row two">
-      <div><label>Date</label><input id="prefDate" type="date"></div>
-      <div><label>Time</label><select id="prefSlot"><option value="" disabled selected hidden>Select a time…</option></select></div>
-    </div>
-    <div id="calHelp" class="note" style="margin-top:6px"></div>
-    <button class="btn" id="findTimes" style="margin-top:8px" type="button">Check Availability</button>
-  </section>
+      <div class="label mt-3">Brake Parts (optional)</div>
+      <div class="grid grid-4">
+        <label class="pill-check" data-addon="rotors-front">
+          <input type="checkbox" />
+          <div>
+            <div class="pill-label-main">Rotors (Front pair)</div>
+            <div class="pill-label-sub">Parts &amp; install</div>
+          </div>
+        </label>
+        <label class="pill-check" data-addon="rotors-rear">
+          <input type="checkbox" />
+          <div>
+            <div class="pill-label-main">Rotors (Rear pair)</div>
+            <div class="pill-label-sub">Parts &amp; install</div>
+          </div>
+        </label>
+        <label class="pill-check" data-addon="calipers-front">
+          <input type="checkbox" />
+          <div>
+            <div class="pill-label-main">Calipers (Front pair)</div>
+            <div class="pill-label-sub">As needed</div>
+          </div>
+        </label>
+        <label class="pill-check" data-addon="calipers-rear">
+          <input type="checkbox" />
+          <div>
+            <div class="pill-label-main">Calipers (Rear pair)</div>
+            <div class="pill-label-sub">As needed</div>
+          </div>
+        </label>
+      </div>
 
-  <!-- CART -->
-  <section class="card"><h2>Your Cart</h2>
-    <table class="table">
-      <tbody id="lines">
-        <tr><td class="note">No items yet</td><td class="note">$0.00</td></tr>
-      </tbody>
-      <tbody>
-        <tr id="discountRow" style="display:none"><td>Discount (<span id="promoName"></span>)</td><td id="discount">-$0.00</td></tr>
-        <tr><td>Indiana Sales Tax (7%)</td><td id="tax">$0.00</td></tr>
-        <tr class="total-line"><td>Total</td><td id="total">$0.00</td></tr>
-      </tbody>
-    </table>
-    <div class="row two" style="margin-top:6px">
-      <div><label>Promo code</label><input id="promoInput" placeholder="Promo Code here"></div>
-      <div style="align-self:end"><button class="btn" id="applyPromo" type="button">Apply</button> <span class="note" id="promoMsg"></span></div>
-    </div>
-    <div style="display:flex;gap:8px;align-items:center;justify-content:flex-end;margin-top:10px">
-      <button class="btn" id="cashOut" disabled>Pay & Book</button>
-      <span id="submitNote" class="note"></span>
-    </div>
-  </section>
-</div>
+      <div class="label mt-3">Add-ons</div>
+      <div class="grid grid-4">
+        <label class="pill-check" data-addon="tire-rotate">
+          <input type="checkbox" />
+          <div>
+            <div class="pill-label-main">Tire Rotation</div>
+            <div class="pill-label-sub">All four tires</div>
+          </div>
+        </label>
+        <label class="pill-check" data-addon="brake-flush">
+          <input type="checkbox" />
+          <div>
+            <div class="pill-label-main">Brake Fluid Flush</div>
+            <div class="pill-label-sub">Recommended w/ brakes</div>
+          </div>
+        </label>
+        <label class="pill-check" data-addon="diag">
+          <input type="checkbox" />
+          <div>
+            <div class="pill-label-main">Diagnostic Fee</div>
+            <div class="pill-label-sub">If unsure on issue</div>
+          </div>
+        </label>
+      </div>
 
-<script>
-/*** ===============================
- *  CONFIG
- * =============================== */
+      <div class="section-footnote">
+        Prices are estimates and assume normal conditions. If your vehicle requires unusual parts or extra labor we’ll confirm any change before work.
+      </div>
+    </section>
 
-// 🔗 Your deployed Apps Script Web App URL (ENDS WITH /exec)
-const GAS_ENDPOINT = "https://script.google.com/macros/s/AKfycbzo6QgEqlVlEy6Ht8mRIDHxL2p5TeSkbbfif_VEmRgka80E2_gRokVUNrNMbHZJ9WZW/exec";
+    <!-- Date & Time -->
+    <section class="card" id="time-section">
+      <div class="card-header">
+        <h2 class="card-title">Preferred Date &amp; Time</h2>
+      </div>
+      <div class="grid grid-3">
+        <div>
+          <div class="label">Date</div>
+          <input id="prefDate" type="date" class="input" />
+        </div>
+        <div>
+          <div class="label">Time</div>
+          <select id="prefTime" class="input">
+            <option value="">Select a time...</option>
+          </select>
+        </div>
+        <div class="flex" style="align-items:flex-end">
+          <button id="checkTimesBtn" class="btn btn-outline" type="button">Check Availability</button>
+        </div>
+      </div>
+      <div id="time-msg" class="msg"></div>
+    </section>
 
-// Business + pricing
-const BIZ_NAME = "Lazy Day Mobile Oil";
-const TAX_RATE = 0.07;            // 7% Indiana sales tax
-const PRICING = {
-  oilBase: 109.99,                // base oil change price (incl. up to 5 qts)
-  extraQt: 7.99,                  // per extra quart
-  synUp: 29.99                    // upgrade to full synthetic, if you use it
-};
+    <!-- Cart / payment -->
+    <section class="card" id="cart-section">
+      <div class="card-header">
+        <h2 class="card-title">Your Cart</h2>
+      </div>
+      <div id="cart-lines" style="min-height:40px;font-size:14px;color:var(--muted)">
+        No items yet.
+      </div>
+      <div class="mt-3">
+        <div class="cart-row muted">
+          <span>Indiana Sales Tax (7%)</span>
+          <span id="cart-tax">$0.00</span>
+        </div>
+        <div class="cart-row muted">
+          <span>$5 Convenience Fee</span>
+          <span id="cart-fee">$5.00</span>
+        </div>
+        <div class="cart-row total">
+          <span>Total</span>
+          <span id="cart-total">$0.00</span>
+        </div>
+      </div>
+      <div class="mt-4 flex">
+        <button id="payBtn" class="btn" type="button" disabled>Confirm &amp; Pay</button>
+        <span class="msg">Card-only payment. Your card is charged after we confirm your appointment.</span>
+      </div>
+      <div id="pay-msg" class="msg msg-error" style="display:none"></div>
+    </section>
+  </div>
 
-// Acuity appointment type IDs (must match what you set in Acuity)
-const ACUITY_TYPES = {
-  oil: 85384590,
-  brakes_front: 85384591,
-  brakes_rear: 85384592,
-  brakes_both: 85384593,
-  oil_both: 85384594   // aligned with <option value="oil_both">
-};
+  <script>
+    // === CONFIG (CLIENT) ===
+    const CALENDAR_ENDPOINT = "https://script.google.com/macros/s/REPLACE_WITH_YOUR_DEPLOYMENT/exec"; // replace with your Web App URL
 
-// Helper
-const byId = (id) => document.getElementById(id);
+    const TAX = 0.07;
+    const OVERHEAD_RATE = 0.065;           // 6.5% overhead (hidden)
+    const CONVENIENCE_FEE = 5.0;           // $5 fee, shown at bottom
 
-/*** ===============================
- *  UI HELPERS
- * =============================== */
+    const PRICING = {
+      // Primary service base prices (before overhead & tax)
+      primary: {
+        "oil-basic": 109.99,
+        "oil-syn": 139.99,
+        "brakes-front": 289.99,
+        "brakes-rear": 289.99,
+        "brakes-all": 529.99,
+      },
+      // Extra per quart beyond 5qts
+      extraQt: {
+        conv: 7.99,
+        "syn-blend": 9.99,
+        "full-syn": 12.99,
+      },
+      // Addons
+      addons: {
+        "rotors-front": 249.99,
+        "rotors-rear": 249.99,
+        "calipers-front": 259.99,
+        "calipers-rear": 259.99,
+        "tire-rotate": 34.99,
+        "brake-flush": 119.99,
+        diag: 79.99,
+      }
+    };
 
-// Format money
-function fmtMoney(n) {
-  return "$" + (n || 0).toFixed(2);
-}
+    // === DOM ELEMENTS ===
+    const vinInput         = document.getElementById('vin');
+    const vinBtn           = document.getElementById('vin-lookup-btn');
+    const vinDemoBtn       = document.getElementById('vin-demo-btn');
+    const vinMsg           = document.getElementById('vin-msg');
 
-// Read number from input (or 0)
-function numVal(id) {
-  const el = byId(id);
-  if (!el) return 0;
-  const v = parseFloat(el.value);
-  return isNaN(v) ? 0 : v;
-}
+    const yearInput        = document.getElementById('year');
+    const makeInput        = document.getElementById('make');
+    const modelInput       = document.getElementById('model');
+    const engineInput      = document.getElementById('engine');
+    const oilCapacityInput = document.getElementById('oilCapacity');
+    const oilGradeSelect   = document.getElementById('oilGrade');
 
-// Show note / error under the Pay & Book button
-function setSubmitNote(msg, isError = false) {
-  const el = byId("submitNote");
-  if (!el) return;
-  el.textContent = msg || "";
-  el.style.color = isError ? "#b91c1c" : "#065f46";
-}
+    const primaryServiceSelect = document.getElementById('primaryService');
+    const oilTypeSelect        = document.getElementById('oilType');
 
-// Note under Date/Time
-function setAvailNote(msg) {
-  const el = byId("calHelp");        // <-- use existing calHelp element
-  if (!el) return;
-  el.textContent = msg || "";
-}
+    const prefDateInput   = document.getElementById('prefDate');
+    const prefTimeSelect  = document.getElementById('prefTime');
+    const checkTimesBtn   = document.getElementById('checkTimesBtn');
+    const timeMsg         = document.getElementById('time-msg');
 
-/*** ===============================
- *  CART / TOTALS
- * =============================== */
+    const cartLines       = document.getElementById('cart-lines');
+    const cartTaxEl       = document.getElementById('cart-tax');
+    const cartFeeEl       = document.getElementById('cart-fee');
+    const cartTotalEl     = document.getElementById('cart-total');
+    const payBtn          = document.getElementById('payBtn');
+    const payMsg          = document.getElementById('pay-msg');
 
-function computeTotals() {
-  // Read current capacity
-  const qts = numVal("capacity"); // total qt capacity (0 if empty / invalid)
+    const addonPills = Array.from(document.querySelectorAll('[data-addon]'));
 
-  let subtotal = 0;
-  let extraQts = 0;
+    // === HELPERS ===
+    function fmt(n){ return "$" + n.toFixed(2); }
 
-  // Only charge for oil if we have a capacity number
-  if (qts > 0) {
-    subtotal += PRICING.oilBase;               // base service
-    extraQts = Math.max(0, qts - 5);           // anything over 5 qts
-    subtotal += extraQts * PRICING.extraQt;
-  }
-
-  // TODO: add-ons & brakes can be added here later
-
-  // Tax only on whatever subtotal we have
-  const tax = subtotal * TAX_RATE;
-  const total = subtotal + tax;
-
-  // Update DOM
-  const taxEl = byId("tax");
-  const totalEl = byId("total");
-  if (taxEl) taxEl.textContent = fmtMoney(tax);
-  if (totalEl) totalEl.textContent = fmtMoney(total);
-
-  return { subtotal, tax, total, extraQts };
-}
-
-function updateCheckoutState() {
-  const { total } = computeTotals();
-  const needed = missing();
-  const btn = byId("cashOut");
-  if (!btn) return;
-  btn.disabled = !!needed.length || total <= 0;
-}
-
-/*** ===============================
- *  FIELD VALIDATION
- * =============================== */
-
-function missing() {
-  const fields = [
-    { id: "firstName", label: "First name" },
-    { id: "lastName", label: "Last name" },
-    { id: "phone", label: "Phone" },
-    { id: "email", label: "Email" },
-    { id: "vin", label: "VIN" },
-    { id: "prefDate", label: "Preferred date" },
-    { id: "prefSlot", label: "Preferred time" },
-    { id: "addr", label: "Service address" },
-    { id: "city", label: "City" },
-    { id: "state", label: "State" },
-    { id: "zip", label: "ZIP" }
-  ];
-
-  const missing = [];
-  fields.forEach(f => {
-    const el = byId(f.id);
-    if (!el) return;
-    const v = (el.value || "").trim();
-    if (!v) missing.push(f.label);
-  });
-  return missing;
-}
-
-/*** ===============================
- *  VIN LOOKUP (NHTSA)
- * =============================== */
-
-async function handleVinLookup() {
-  const vinEl = byId("vin");
-  if (!vinEl) {
-    console.error("VIN input #vin not found");
-    return;
-  }
-
-  const rawVin = (vinEl.value || "").trim();
-  if (!rawVin) {
-    alert("Please enter a VIN first.");
-    return;
-  }
-
-  const vin = rawVin.replace(/[^0-9A-Za-z]/g, "").toUpperCase();
-  if (vin.length < 11) {
-    alert("Please enter a valid VIN (at least 11 characters).");
-    return;
-  }
-
-  const yearEl   = byId("year");
-  const makeEl   = byId("make");
-  const modelEl  = byId("model");
-  const engineEl = byId("engine");
-
-  if (yearEl)   yearEl.value   = "";
-  if (makeEl)   makeEl.value   = "";
-  if (modelEl)  modelEl.value  = "";
-  if (engineEl) engineEl.value = "";
-
-  try {
-    const url = `https://vpic.nhtsa.dot.gov/api/vehicles/decodevinvaluesextended/${encodeURIComponent(vin)}?format=json`;
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-
-    if (!data || !Array.isArray(data.Results) || !data.Results.length) {
-      alert("No vehicle data returned for that VIN.");
-      return;
+    function getOilCapacity(){
+      const v = parseFloat(oilCapacityInput.value);
+      if (!isNaN(v) && v > 0) return v;
+      return 5; // default
     }
 
-    const r = data.Results[0];
+    // === PRICING / CART ===
+    let latestQuote = {
+      items:[],
+      subtotal:0,
+      overhead:0,
+      tax:0,
+      fee:CONVENIENCE_FEE,
+      total:0,
+    };
 
-    if (yearEl)   yearEl.value   = r.ModelYear || "";
-    if (makeEl)   makeEl.value   = r.Make || "";
-    if (modelEl)  modelEl.value  = r.Model || "";
+    function recalcPricing(){
+      const primaryKey = primaryServiceSelect.value;
+      if(!primaryKey){
+        cartLines.textContent = "No items yet.";
+        cartTaxEl.textContent = fmt(0);
+        cartTotalEl.textContent = fmt(0);
+        payBtn.disabled = true;
+        return;
+      }
 
-    if (engineEl) {
-      const sizeL = r.DisplacementL || r.EngineDisplacementL || "";
-      const cyl   = r.EngineCylinders || "";
-      const cfg   = r.EngineConfiguration || "";
-      const descr = [sizeL ? `${sizeL}L` : "", cyl ? `${cyl} cyl` : "", cfg]
-        .filter(Boolean)
-        .join(" ");
-      engineEl.value = descr;
+      const oilTypeKey = oilTypeSelect.value || "conv";
+      const qts = getOilCapacity();
+
+      const items = [];
+      let subtotal = 0;
+
+      // primary
+      const basePrice = PRICING.primary[primaryKey] || 0;
+      if(basePrice>0){
+        items.push({label: primaryServiceSelect.options[primaryServiceSelect.selectedIndex].text, amount: basePrice});
+        subtotal += basePrice;
+      }
+
+      // extra qts beyond 5
+      if(primaryKey.startsWith("oil")){
+        const extra = Math.max(0, qts - 5);
+        if(extra > 0){
+          const perQt = PRICING.extraQt[oilTypeKey] || PRICING.extraQt.conv;
+          const extraPrice = extra * perQt;
+          items.push({label:`Extra oil (${extra.toFixed(1)} qts)`, amount: extraPrice});
+          subtotal += extraPrice;
+        }
+      }
+
+      // addons
+      addonPills.forEach(p=>{
+        const key = p.getAttribute('data-addon');
+        const checked = p.querySelector('input[type="checkbox"]').checked;
+        p.classList.toggle('active', checked);
+        if(!checked) return;
+        const price = PRICING.addons[key] || 0;
+        if(price>0){
+          const labelMain = p.querySelector('.pill-label-main').textContent.trim();
+          items.push({label:labelMain, amount:price});
+          subtotal += price;
+        }
+      });
+
+      const overhead = subtotal * OVERHEAD_RATE;   // hidden
+      const taxBase  = subtotal + overhead + CONVENIENCE_FEE;
+      const tax      = taxBase * TAX;
+      const total    = taxBase + tax;
+
+      latestQuote = {
+        items,
+        subtotal,
+        overhead,
+        tax,
+        fee:CONVENIENCE_FEE,
+        total
+      };
+
+      renderCart();
     }
 
-    updateCheckoutState();
-  } catch (err) {
-    console.error("VIN lookup error", err);
-    alert("Could not look up VIN right now. Please try again or enter details manually.");
-  }
-}
+    function renderCart(){
+      if(!latestQuote.items.length){
+        cartLines.textContent = "No items yet.";
+        cartTaxEl.textContent   = fmt(0);
+        cartFeeEl.textContent   = fmt(CONVENIENCE_FEE);
+        cartTotalEl.textContent = fmt(0);
+        payBtn.disabled = true;
+        return;
+      }
 
-/*** ===============================
- *  ACUITY – LOAD TIMES
- * =============================== */
+      cartLines.innerHTML = "";
+      latestQuote.items.forEach(it=>{
+        const row = document.createElement('div');
+        row.className = "cart-row";
+        row.innerHTML = `<span>${it.label}</span><span>${fmt(it.amount)}</span>`;
+        cartLines.appendChild(row);
+      });
 
-async function loadTimesForDate() {
-  const dateEl = byId("prefDate");
-  const slotEl = byId("prefSlot");
-  if (!dateEl || !slotEl) return;
+      // we keep overhead hidden; cart shows only tax, fee, total
+      cartTaxEl.textContent   = fmt(latestQuote.tax);
+      cartFeeEl.textContent   = fmt(latestQuote.fee);
+      cartTotalEl.textContent = fmt(latestQuote.total);
 
-  const date = dateEl.value; // "YYYY-MM-DD"
-  if (!date) return;
-
-  const serviceSel = byId("service");
-  const serviceKey = serviceSel ? serviceSel.value : "oil";
-  const appointmentTypeID = ACUITY_TYPES[serviceKey] || ACUITY_TYPES.oil;
-
-  // Reset dropdown
-  slotEl.innerHTML = "";
-  const opt = document.createElement("option");
-  opt.textContent = "Loading times...";
-  opt.value = "";
-  slotEl.appendChild(opt);
-  slotEl.disabled = true;
-  setAvailNote("Checking Acuity schedule…");
-
-  try {
-    const url = `${GAS_ENDPOINT}?path=times` +
-      `&appointmentTypeID=${encodeURIComponent(appointmentTypeID)}` +
-      `&date=${encodeURIComponent(date)}`;
-
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const json = await res.json();
-
-    slotEl.innerHTML = "";
-    if (!json.ok || !Array.isArray(json.slots) || !json.slots.length) {
-      const o = document.createElement("option");
-      o.textContent = json.error || "No times available";
-      o.value = "";
-      slotEl.appendChild(o);
-      slotEl.disabled = true;
-      setAvailNote(json.error || "No open times for that day.");
-      return;
+      payBtn.disabled = false;
     }
 
-    json.slots.forEach(s => {
-      const o = document.createElement("option");
-      o.value = s.time;
-      o.textContent = s.time;
-      slotEl.appendChild(o);
-    });
+    // === VIN LOOKUP ===
+    async function handleVinLookup(){
+      const vin = vinInput.value.trim();
+      vinMsg.style.display = "none";
+      vinMsg.textContent = "";
 
-    slotEl.disabled = false;
-    setAvailNote("");
-  } catch (err) {
-    console.error("loadTimesForDate error", err);
-    slotEl.innerHTML = "";
-    const o = document.createElement("option");
-    o.textContent = "Unable to load times";
-    o.value = "";
-    slotEl.appendChild(o);
-    slotEl.disabled = true;
-    setAvailNote("Problem talking to Acuity – please try again.");
-  }
-}
+      if(!vin){
+        vinMsg.textContent = "Enter a VIN first.";
+        vinMsg.style.display = "block";
+        return;
+      }
 
-/*** ===============================
- *  STRIPE CHECKOUT FLOW (via GAS)
- * =============================== */
+      vinBtn.disabled = true;
+      vinBtn.textContent = "Looking up...";
 
-async function handlePayAndBook() {
-  const need = missing();
-  if (need.length) {
-    setSubmitNote("Missing: " + need.join(", "), true);
-    updateCheckoutState();
-    return;
-  }
+      try{
+        const url = `${CALENDAR_ENDPOINT}?path=vin&vin=${encodeURIComponent(vin)}`;
+        const res = await fetch(url);
+        const data = await res.json();
 
-  const { total, extraQts } = computeTotals();
-  const amountCents = Math.round(total * 100);
+        if(!data.ok){
+          throw new Error(data.error || "VIN lookup failed");
+        }
 
-  const serviceSel = byId("service");
-  const serviceKey = serviceSel ? serviceSel.value : "oil";
-  const appointmentTypeID = ACUITY_TYPES[serviceKey] || ACUITY_TYPES.oil;
+        yearInput.value        = data.year   || "";
+        makeInput.value        = data.make   || "";
+        modelInput.value       = data.model  || "";
+        engineInput.value      = data.engine || "";
+        oilCapacityInput.value = data.oilQts != null ? data.oilQts : "";
 
-  const d = byId("prefDate")?.value || "";
-  const t = byId("prefSlot")?.value || "";
-  const datetime = d && t ? `${d} ${t}` : "";
+        if(!oilGradeSelect.value && data.oilGrade){
+          oilGradeSelect.value = data.oilGrade;
+        }
 
-  const payload = {
-    amountCents,
-    appointmentTypeID,
-    datetime,
-    firstName: byId("firstName")?.value || "",
-    lastName: byId("lastName")?.value || "",
-    email: byId("email")?.value || "",
-    phone: byId("phone")?.value || "",
-    notes: [
-      `VIN: ${(byId("vin")?.value || "").toUpperCase()}`,
-      `Capacity: ${byId("capacity")?.value || ""} qts (extra: ${extraQts})`,
-      `Oil Grade: ${byId("viscosity")?.value || ""}`,
-      `Addr: ${byId("addr")?.value || ""}, ${byId("city")?.value || ""}, ${byId("state")?.value || ""} ${byId("zip")?.value || ""}`,
-      `Tech notes: ${byId("techNotes")?.value || ""}`
-    ].join(" | ")
-  };
-
-  const btn = byId("cashOut");
-  if (btn) btn.disabled = true;
-  setSubmitNote("Creating secure checkout with Stripe…", false);
-
-  try {
-    const res = await fetch(`${GAS_ENDPOINT}?path=stripe_create`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
-    const json = await res.json();
-
-    if (!json.ok || !json.url) {
-      console.error(json);
-      setSubmitNote(json.error || "Unable to start checkout. Please call or text to book.", true);
-      if (btn) btn.disabled = false;
-      return;
+        recalcPricing();
+      }catch(err){
+        console.error(err);
+        vinMsg.textContent = err.message;
+        vinMsg.style.display = "block";
+      }finally{
+        vinBtn.disabled = false;
+        vinBtn.textContent = "Lookup VIN";
+      }
     }
 
-    window.location.href = json.url;   // Stripe Checkout
-  } catch (err) {
-    console.error(err);
-    setSubmitNote("Network error talking to server. Please try again.", true);
-    if (btn) btn.disabled = false;
-  }
-}
-
-/*** ===============================
- *  INIT – WIRE UP EVENTS
- * =============================== */
-
-function initLDMO() {
-  const inputsToWatch = [
-    "capacity", "firstName", "lastName", "phone", "email",
-    "vin", "prefDate", "prefSlot", "addr", "city", "state", "zip"
-  ];
-  inputsToWatch.forEach(id => {
-    const el = byId(id);
-    if (!el) return;
-    el.addEventListener("input", updateCheckoutState);
-    el.addEventListener("change", updateCheckoutState);
-  });
-
-  const prefDateEl = byId("prefDate");
-  if (prefDateEl) {
-    prefDateEl.addEventListener("change", () => {
-      loadTimesForDate();
-      updateCheckoutState();
+    // Demo VIN button (just fills in a known good VIN)
+    vinDemoBtn.addEventListener('click', ()=>{
+      vinInput.value = "1GT49VEY4RF249205";
     });
-  }
 
-  const findBtn = byId("findTimes");          // wire up "Check Availability" button
-  if (findBtn) {
-    findBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      loadTimesForDate();
+    vinBtn.addEventListener('click', handleVinLookup);
+
+    vinInput.addEventListener('keydown', e=>{
+      if(e.key === "Enter"){
+        e.preventDefault();
+        handleVinLookup();
+      }
     });
-  }
 
-  const cashBtn = byId("cashOut");
-  if (cashBtn) {
-    cashBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      handlePayAndBook();
+    // === TIME / ACUITY ===
+    async function handleCheckTimes(){
+      timeMsg.textContent = "";
+      const date = prefDateInput.value;
+      const primaryKey = primaryServiceSelect.value;
+
+      if(!date){
+        timeMsg.textContent = "Choose a date first.";
+        return;
+      }
+      if(!primaryKey){
+        timeMsg.textContent = "Choose a primary service first.";
+        return;
+      }
+
+      // simple mapping – adjust appointmentTypeID to match your Acuity service IDs
+      let appointmentTypeID = "";
+      switch(primaryKey){
+        case "oil-basic":
+        case "oil-syn":
+          appointmentTypeID = "1"; // replace with real Acuity type id
+          break;
+        case "brakes-front":
+        case "brakes-rear":
+        case "brakes-all":
+          appointmentTypeID = "2"; // replace with real id
+          break;
+        default:
+          appointmentTypeID = "1";
+      }
+
+      checkTimesBtn.disabled = true;
+      checkTimesBtn.textContent = "Checking...";
+
+      try{
+        const url = `${CALENDAR_ENDPOINT}?path=times&date=${encodeURIComponent(date)}&appointmentTypeID=${encodeURIComponent(appointmentTypeID)}`;
+        const res = await fetch(url);
+        const data = await res.json();
+
+        if(!data.ok){
+          throw new Error(data.error || "Could not load times");
+        }
+
+        const times = data.times || [];
+        prefTimeSelect.innerHTML = `<option value="">Select a time...</option>`;
+        times.forEach(t=>{
+          const opt = document.createElement('option');
+          opt.value = t;
+          opt.textContent = t;
+          prefTimeSelect.appendChild(opt);
+        });
+
+        if(!times.length){
+          timeMsg.textContent = "No open slots for that date. Try another day.";
+        }else{
+          timeMsg.textContent = "Times loaded from our live schedule.";
+        }
+      }catch(err){
+        console.error(err);
+        timeMsg.textContent = err.message;
+      }finally{
+        checkTimesBtn.disabled = false;
+        checkTimesBtn.textContent = "Check Availability";
+      }
+    }
+
+    checkTimesBtn.addEventListener('click', handleCheckTimes);
+
+    // === PAYMENT ===
+    async function handlePay(){
+      payMsg.style.display = "none";
+      payMsg.textContent = "";
+
+      if(!latestQuote.items.length){
+        payMsg.textContent = "Add a service first.";
+        payMsg.style.display = "block";
+        return;
+      }
+      if(!prefDateInput.value || !prefTimeSelect.value){
+        payMsg.textContent = "Pick a date and time before paying.";
+        payMsg.style.display = "block";
+        return;
+      }
+
+      payBtn.disabled = true;
+      payBtn.textContent = "Creating payment...";
+
+      const payload = {
+        path: "create-payment-intent",
+        amount: Math.round(latestQuote.total * 100),
+        currency: "usd",
+        description: "Lazy Day Mobile Oil Service",
+        meta: {
+          vin: vinInput.value.trim(),
+          year: yearInput.value,
+          make: makeInput.value,
+          model: modelInput.value,
+          engine: engineInput.value,
+          oilCapacity: oilCapacityInput.value,
+          oilGrade: oilGradeSelect.value,
+          primaryService: primaryServiceSelect.value,
+          oilType: oilTypeSelect.value,
+          addons: addonPills.filter(p=>p.querySelector('input').checked).map(p=>p.getAttribute('data-addon')),
+          date: prefDateInput.value,
+          time: prefTimeSelect.value,
+          quote: latestQuote
+        }
+      };
+
+      try{
+        const res = await fetch(CALENDAR_ENDPOINT, {
+          method: "POST",
+          headers: {"Content-Type":"application/json"},
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+
+        if(!data.ok){
+          throw new Error(data.error || "Payment session failed");
+        }
+
+        // For now we just show a success message; front-end Stripe integration can be added.
+        alert("Order received! We will confirm your appointment shortly.");
+      }catch(err){
+        console.error(err);
+        payMsg.textContent = err.message;
+        payMsg.style.display = "block";
+      }finally{
+        payBtn.disabled = false;
+        payBtn.textContent = "Confirm & Pay";
+      }
+    }
+
+    payBtn.addEventListener('click', handlePay);
+
+    // Recalculate pricing on changes
+    primaryServiceSelect.addEventListener('change', recalcPricing);
+    oilTypeSelect.addEventListener('change', recalcPricing);
+    addonPills.forEach(p=>{
+      const cb = p.querySelector('input[type="checkbox"]');
+      cb.addEventListener('change', recalcPricing);
     });
-  }
 
-  const vinBtn = byId("vinLookupBtn");
-  if (vinBtn) {
-    vinBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      handleVinLookup();
-    });
-  }
-
-  // Initial totals
-  computeTotals();
-  updateCheckoutState();
-}
-
-document.addEventListener("DOMContentLoaded", initLDMO);
-</script>
+    // init
+    cartFeeEl.textContent = fmt(CONVENIENCE_FEE);
+    recalcPricing();
+  </script>
 </body>
 </html>
