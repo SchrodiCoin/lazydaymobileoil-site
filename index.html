@@ -687,20 +687,33 @@
         return;
       }
 
-      let appointmentTypeID = "";
-      switch(primaryKey){
-        case "oil-basic":
-        case "oil-syn":
-          appointmentTypeID = "1"; // update with real Acuity IDs
-          break;
-        case "brakes-front":
-        case "brakes-rear":
-        case "brakes-all":
-          appointmentTypeID = "2";
-          break;
-        default:
-          appointmentTypeID = "1";
-      }
+     let appointmentTypeID = "";
+switch (primaryKey) {
+  case "oil-basic":
+  case "oil-syn":
+    // Oil Change appointment in Acuity
+    appointmentTypeID = "85364590";
+    break;
+
+  case "brakes-front":
+    // Front Brake Only
+    appointmentTypeID = "85364671";
+    break;
+
+  case "brakes-rear":
+    // Rear Brakes Only
+    appointmentTypeID = "85364740";
+    break;
+
+  case "brakes-all":
+    // Front & Rear Brakes
+    appointmentTypeID = "85364836";
+    break;
+
+  default:
+    // Fallback to Oil Change if something unexpected happens
+    appointmentTypeID = "85364590";
+}
 
       checkTimesBtn.disabled = true;
       checkTimesBtn.textContent = "Checking...";
@@ -859,3 +872,4 @@
   </script>
 </body>
 </html>
+
