@@ -395,31 +395,6 @@
         </label>
       </div>
 
-      <div class="label mt-3">Add-ons</div>
-      <div class="grid grid-4">
-        <label class="pill-check" data-addon="tire-rotate">
-          <input type="checkbox" />
-          <div>
-            <div class="pill-label-main">Tire Rotation</div>
-            <div class="pill-label-sub">All four tires</div>
-          </div>
-        </label>
-        <label class="pill-check" data-addon="brake-flush">
-          <input type="checkbox" />
-          <div>
-            <div class="pill-label-main">Brake Fluid Flush</div>
-            <div class="pill-label-sub">Recommended w/ brakes</div>
-          </div>
-        </label>
-        <label class="pill-check" data-addon="diag">
-          <input type="checkbox" />
-          <div>
-            <div class="pill-label-main">Diagnostic Fee</div>
-            <div class="pill-label-sub">If unsure on issue</div>
-          </div>
-        </label>
-      </div>
-
       <div class="section-footnote">
         Prices are estimates and assume normal conditions. If your vehicle requires unusual parts or extra labor we’ll confirm any change before work.
       </div>
@@ -475,7 +450,6 @@
   </div>
 
   <script>
-    // === CONFIG – your live Web App URL ===
     const CALENDAR_ENDPOINT =
       "https://script.google.com/macros/s/AKfycbzo6QgEqlVlEy6Ht8mRIDHxL2p5TeSkbbfif_VEmRgka80E2_gRokVUNrNMbHZJ9WZW/exec";
 
@@ -496,14 +470,12 @@
         "syn-blend": 9.99,
         "full-syn": 12.99,
       },
+      // only brake parts here now
       addons: {
         "rotors-front": 249.99,
         "rotors-rear": 249.99,
         "calipers-front": 259.99,
-        "calipers-rear": 259.99,
-        "tire-rotate": 34.99,
-        "brake-flush": 119.99,
-        diag: 79.99,
+        "calipers-rear": 259.99
       }
     };
 
