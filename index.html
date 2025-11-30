@@ -595,12 +595,13 @@
             quote:latestQuote
           }
         };
-        const res = await fetch(CALENDAR_ENDPOINT,{
-          method:"POST",
-          headers:{"Content-Type":"application/json"},
-          body:JSON.stringify(payload)
-        });
-        const data = await res.json();
+ // send as a simple form POST so Apps Script accepts it without CORS issues
+const res = await fetch(CALENDAR_ENDPOINT, {
+  method: "POST",
+  body: "data=" + encodeURIComponent(JSON.stringify(payload))
+});
+const data = await res.json();
+
         if(!data.ok) throw new Error(data.error || "Payment failed");
         alert("Order received! We will confirm your appointment shortly.");
       }catch(err){
@@ -625,3 +626,4 @@
   </script>
 </body>
 </html>
+
